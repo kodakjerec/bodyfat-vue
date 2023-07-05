@@ -2,7 +2,7 @@ import { storeGoogleDrive, storeSettings } from "@/store/index";
 import { googleSdkLoaded } from "vue3-google-login";
 import { createToaster } from "@meforma/vue-toaster";
 
-const gDriveId: string = "929956701294-bvbtd8uh85cnb8gbf1fi5sboa9ue1f5r.apps.googleusercontent.com";
+export const gDriveId: string = "203042550679-snos0ccs48migeeo2kd0mgdtc43vsp90.apps.googleusercontent.com";
 
 /**
  * get a new token
@@ -13,6 +13,7 @@ export async function accessToken() {
       .initTokenClient({
         client_id: gDriveId,
         scope: "https://www.googleapis.com/auth/drive.file profile",
+        prompt: "consent",
         callback: async (response) => {
           storeSettings().setGDriveToken(response.access_token);
           createToaster().success("Login success. Checking Cloud Data.", { position: "top" });

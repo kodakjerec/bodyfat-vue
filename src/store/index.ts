@@ -12,28 +12,59 @@ function storageSet(key, value, cloundSave: boolean = true): void {
 function storageGet(key): any {
   return localStorage.getItem(key);
 }
-
+export interface recordModule {
+  id:number,
+  colName:string,
+  colType:string
+}
 export const storeSettings = defineStore({
   id: "settings",
   state: () => ({
     secretKey: "kodak19890604", // secret key
-    recordingTable: {"日期":"","體重":"","BMI":"","體脂肪率":"","肌肉量":"","內臟脂肪":"","體內年齡":"","基礎代謝":""}, // recording table
+    recordingTable: [
+      {id:0,colName:"日期",colType:"datetime-local"},
+      {id:1,colName:"體重",colType:"number"},
+      {id:2,colName:"BMI",colType:"number"},
+      {id:3,colName:"體脂肪率",colType:"number"},
+      {id:4,colName:"肌肉量",colType:"number"},
+      {id:5,colName:"內臟脂肪",colType:"number"},
+      {id:6,colName:"體內年齡",colType:"number"},
+      {id:7,colName:"基礎代謝",colType:"number"}], // recording table
     lastPath: "", // last visit page
+    bodyFatDatalist:[],
     googleOAuth2token: "", // google OAuth2 token
-    googleDriveFileName: "yourGPT_localStorage.txt",
+    googleDriveFileName: "BodyFatRecorder.txt",
   }),
   getters: {
     getSecretKey(state) {
       return state.secretKey;
     },
     getRecordingTable(state) {
+      if (state.recordingTable.length===8) {
+        const tempData = storageGet("recordingTable");
+        if (tempData) {
+          state.recordingTable = JSON.parse(tempData);
+        }
+      }
       return state.recordingTable;
     },
     getLastPath(state) {
       if (!state.lastPath) {
-        state.lastPath = storageGet("lastPath") ?? "";
+        const tempData = storageGet("lastPath");
+        if (tempData) {
+          state.lastPath = tempData;
+        }
       }
       return state.lastPath;
+    },
+    getBodyFatDataList(state) {
+      if (state.bodyFatDatalist.length===0) {
+        const tempData = storageGet("bodyFatDatalist");
+        if (tempData) {
+          state.bodyFatDatalist = JSON.parse(tempData);
+        }
+      }
+      return state.bodyFatDatalist;
     },
     getGDriveToken(state) {
       if (!state.googleOAuth2token) {
@@ -49,9 +80,13 @@ export const storeSettings = defineStore({
       this.lastPath = path;
       storageSet("lastPath", this.lastPath);
     },
-    setRecordingTable(fromTable: object) {
+    setRecordingTable(fromTable: Array<recordModule>) {
       this.recordingTable = fromTable;
-      storageSet("recordingTable", this.lastPath);
+      storageSet("recordingTable", JSON.stringify(this.recordingTable));
+    },
+    insertBodyFatDatalist(record:object) {
+      this.bodyFatDatalist.push(record);
+      storageSet("bodyFatDatalist", JSON.stringify(this.bodyFatDatalist));
     },
     setGDriveToken(token: string) {
       this.googleOAuth2token = token;

@@ -6,23 +6,26 @@
     <div v-if="nowLoading" class="absolute w-full h-screen bg-slate-100 opacity-90 z-10">
       <div class="inset-x-20 top-1/2 absolute font-black text-2xl">{{ loadingMessage }}</div>
     </div>
-      <!-- Content -->
-      <div class="w-full">
-        <router-view v-if="nowPath === 'home'" name="home" @fromClick="(path) => nowPath = path" />
-        <router-view v-if="nowPath === 'settings'" name="settings" />
-      </div>
+    <!-- Content -->
+    <div class="w-full">
+      <router-view v-if="nowPath === 'home'" name="home" @fromClick="(path) => nowPath = path" />
+      <router-view v-if="nowPath === 'settings'" name="settings" @fromClick="(path) => nowPath = path" />
+      <router-view v-if="nowPath === 'calendar'" name="calendar" @fromClick="(path) => nowPath = path" />
+    </div>
   </div>
   <div>
     <div id="footer" class="absolute bottom-0 w-full bg-white flex">
+      <div class="btn w-1/4 flex" @click="gotoPath('home')">
+        <home theme="filled" size="24" fill="#000000"/><span>首頁</span>
+      </div>
+      <div class="btn w-1/4 flex" @click="gotoPath('calendar')">
+        <calendarDot theme="filled" size="24" fill="#000000"/><span>日曆</span>
+      </div>
       <div class="btn w-1/4 flex">
-        <home theme="filled" size="24" fill="#000000"/><span>首頁</span></div>
-      <div class="btn w-1/4 flex">
-        <calendarDot theme="filled" size="24" fill="#000000"/><span>日曆</span></div>
-      <div class="btn w-1/4 flex">
-        <chartHistogram theme="filled" size="24" fill="#000000"/><span>圖表</span></div>
-      <div class="btn w-1/4 flex">
-        <setting theme="filled" size="24" fill="#000000"/>
-        <span>登入</span></div>
+        <chartHistogram theme="filled" size="24" fill="#000000"/><span>圖表</span>
+      </div>
+      <div class="btn w-1/4 flex" @click="gotoPath('settings')">
+        <setting theme="filled" size="24" fill="#000000"/><span>設定</span></div>
     </div>
   </div>
 </template>
@@ -45,6 +48,20 @@ export default {
     }
   },
   async mounted() {
+    const token = storeSettings().getGDriveToken;
+
+    if (token) {
+      this.nowLoading = true;
+      this.loadingMessage = "Loading cloud data.";
+      await storeGoogleDrive().cloundToLocalStorage();
+      this.nowLoading = false;
+      this.loadingMessage = "";
+    }
+    
+    const lastPath = storeSettings().getLastPath;
+    if (lastPath) {
+      this.nowPath = lastPath;
+    }
   },
   methods: {
     gotoPath(path: string) {

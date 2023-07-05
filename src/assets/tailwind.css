@@ -4,7 +4,7 @@
 
 @layer components {
   .btn {
-    @apply px-4 py-2 font-medium justify-center border border-black capitalize duration-300 transform bg-white rounded-md hover:bg-blue-600 whitespace-nowrap disabled:bg-blue-300;
+    @apply px-4 py-2 font-medium justify-center border border-black capitalize duration-300 transform bg-white rounded-md hover:bg-gray-300 whitespace-nowrap disabled:bg-blue-300;
   }
   .greenBtn {
     @apply px-4 py-2 font-medium text-white capitalize duration-300 transform bg-green-700 rounded-md hover:bg-green-600 focus:outline-none focus:bg-green-600 whitespace-nowrap disabled:bg-green-300;
@@ -12,7 +12,7 @@
   .redBtn {
     @apply px-4 py-2 font-medium text-white capitalize duration-300 transform bg-red-700 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600 whitespace-nowrap disabled:bg-red-300;
   }
-  .label {
+  .label-2xl {
     @apply px-4 py-2 text-2xl flex-grow
   }
   .input {
