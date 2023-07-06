@@ -4,7 +4,7 @@
         <template v-for="item of recordingTable" :key="item.id">
             <label :for="item.colName" class="text-gray-700 mb2 flex mt-6">
                 <span class="label-2xl w-1/3">{{ item.colName }}</span>
-                <input :type="item.colType" :id="item.colName" class="input w-1/2" v-model="recorder[item.colName]">
+                <input :type="item.colType" :id="item.colName" class="input w-1/2" v-model="recorder[item.colName]" @focus="$event.target?.select()">
             </label>
         </template>
         <button class="btn font-black w-full my-10 h-20 text-4xl text-center" @click="save">

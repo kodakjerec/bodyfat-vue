@@ -1,14 +1,14 @@
 <template>
-    <div class="flex flex-col grow">
+    <div class="flex flex-col grow h-3/4 bg-white">
         <calendar-view
             :show-date="showDate"
             :time-format-options="{ hour: 'numeric', minute: '2-digit'}"
             :class="'theme-default'"
-            :date-classes="myDateClasses"
             :current-period-label="'icons'"
             :enable-date-selection="true"
             @click-date="clickDate"
             @click-item="clickItem"
+            class="calendarClass"
             :items="items">
             <template #header="{ headerProps }">
                 <calendar-view-header :header-props="headerProps" @input="setShowDate" />
@@ -21,6 +21,7 @@
 import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calendar"
 import "@/../node_modules/vue-simple-calendar/dist/style.css"
 import "@/../node_modules/vue-simple-calendar/dist/css/default.css"
+import { storeSettings } from '@/store'
 
 export default {
     name: "calendar",
@@ -30,34 +31,22 @@ export default {
     data() {
         return {
             showDate: this.thisMonth(1),
-            items: [{
-                id: "e5",
-                startDate: new Date(),
-                title: "One Day",
-                classes: ["orange"],
-                tooltip: "This is one day"
-            }]
+            items: []
         }
     },
     computed: {
-        myDateClasses() {
-			// This was added to demonstrate the dateClasses prop. Note in particular that the
-			// keys of the object are `yyyy-mm-dd` ISO date strings (not dates), and the values
-			// for those keys are strings or string arrays. Keep in mind that your CSS to style these
-			// may need to be fairly specific to make it override your theme's styles. See the
-			// CSS at the bottom of this component to see how these are styled.
-			const o = {}
-			const theFirst = this.thisMonth(1)
-			const ides = [2, 4, 6, 9].includes(theFirst.getMonth()) ? 15 : 13
-			const idesDate = this.thisMonth(ides)
-			o[CalendarMath.isoYearMonthDay(idesDate)] = "ides"
-			o[CalendarMath.isoYearMonthDay(this.thisMonth(21))] = ["do-you-remember", "the-21st"]
-            console.log(o)
-			return o
-		},
     },
     mounted() {
-
+        // 讀取資料
+        const oldDataList = storeSettings().getBodyFatDataList;
+        oldDataList.map((row, index)=>{
+            this.items.push({
+                id: index,
+                startDate: new Date(row["日期"]),
+                title: row["日期"].slice(-5),
+                class: ["purple"]
+            })
+        })
     },
     methods: {
         thisMonth(d, h, m) {
@@ -77,3 +66,11 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.calendarClass :deep() button {
+    color: black;
+    font-weight: 900;
+    border: none;
+}
+</style>

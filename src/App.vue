@@ -48,6 +48,7 @@ export default {
     }
   },
   async mounted() {
+    storeSettings().getBodyFatDataList;
     const token = storeSettings().getGDriveToken;
 
     if (token) {
