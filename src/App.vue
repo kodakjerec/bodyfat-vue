@@ -10,6 +10,7 @@
       <router-view v-if="nowPath === 'home'" name="home" @fromClick="(path) => nowPath = path" />
       <router-view v-if="nowPath === 'settings'" name="settings" @fromClick="(path) => nowPath = path" />
       <router-view v-if="nowPath === 'calendar'" name="calendar" @fromClick="(path) => nowPath = path" />
+      <router-view v-if="nowPath === 'chart'" name="chart" @fromClick="(path) => nowPath = path" />
     </div>
     <div id="app_footer" class="sticky bottom-0 w-full bg-white flex">
       <div class="btn w-1/4 flex" @click="gotoPath('home')">
@@ -18,7 +19,7 @@
       <div class="btn w-1/4 flex" @click="gotoPath('calendar')">
         <calendarDot theme="filled" size="24" fill="#000000"/><span>日曆</span>
       </div>
-      <div class="btn w-1/4 flex">
+      <div class="btn w-1/4 flex" @click="gotoPath('chart')">
         <chartHistogram theme="filled" size="24" fill="#000000"/><span>圖表</span>
       </div>
       <div class="btn w-1/4 flex" @click="gotoPath('settings')">

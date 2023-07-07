@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calendar"
-import CalendarDialog from "./calendarDialog.vue"
+import CalendarDialog from "./components/calendarDialog.vue"
 import "@/../node_modules/vue-simple-calendar/dist/style.css"
 import "@/../node_modules/vue-simple-calendar/dist/css/default.css"
 import { storeSettings } from '@/store'

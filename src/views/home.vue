@@ -17,7 +17,7 @@
 import { Save } from "@icon-park/vue-next";
 import { storeSettings, type recordModule } from '@/store';
 import { createToaster } from '@meforma/vue-toaster';
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs'
 
 export default {
     name: 'home',

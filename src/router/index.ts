@@ -9,7 +9,8 @@ const router = createRouter({
       components:{
         home: () => import("@/views/home.vue"),
         settings: () => import("@/views/settings.vue"),
-        calendar: () => import("@/views/calendar.vue")
+        calendar: () => import("@/views/calendar.vue"),
+        chart: () => import("@/views/chart.vue")
       }
     }
   ]
