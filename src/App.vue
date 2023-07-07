@@ -1,20 +1,17 @@
 <template>
-  <div class="bg-gray-100 flex h-screen overflow-x-hidden">
-    <!-- shadow -->
-    <div v-if="sidebarActive" class="absolute w-full h-screen bg-slate-100 opacity-60 z-10"></div>
+  <div class="bg-gray-100 flex flex-col grow h-screen overflow-x-hidden">
+    <div id="app_header"></div>
     <!-- nowLoading -->
     <div v-if="nowLoading" class="absolute w-full h-screen bg-slate-100 opacity-90 z-10">
       <div class="inset-x-20 top-1/2 absolute font-black text-2xl">{{ loadingMessage }}</div>
     </div>
     <!-- Content -->
-    <div class="w-full">
+    <div id="app_content" class="calHeight w-full">
       <router-view v-if="nowPath === 'home'" name="home" @fromClick="(path) => nowPath = path" />
       <router-view v-if="nowPath === 'settings'" name="settings" @fromClick="(path) => nowPath = path" />
       <router-view v-if="nowPath === 'calendar'" name="calendar" @fromClick="(path) => nowPath = path" />
     </div>
-  </div>
-  <div>
-    <div id="footer" class="absolute bottom-0 w-full bg-white flex">
+    <div id="app_footer" class="sticky bottom-0 w-full bg-white flex">
       <div class="btn w-1/4 flex" @click="gotoPath('home')">
         <home theme="filled" size="24" fill="#000000"/><span>首頁</span>
       </div>
@@ -41,7 +38,6 @@ export default {
   data() {
     return {
       nowPath: 'home',
-      sidebarActive: false,
       nowLoading: false,
       loadingMessage: "",
       lastActiveTime: null
@@ -70,22 +66,6 @@ export default {
       storeSettings().setLastPath(this.nowPath);
     },
     /**
-     * click sidebar
-     */
-    toggleSidebar() {
-      if (!this.sidebarActive) {
-        if (this.$refs.sidebar)
-          (this.$refs.sidebar as HTMLBodyElement).focus();
-      }
-      this.sidebarActive = !this.sidebarActive;
-    },
-    /**
-     * close sidebar
-     */
-    closeSidebar() {
-      this.sidebarActive = false;
-    },
-    /**
      * Refresh the screen after being idle for a long time
      */
     handlePageFocus() {
@@ -108,25 +88,7 @@ body,
   height: 100%;
 }
 
-/* Default sidebar styles */
-.sidebar {
-  width: 200px;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: -200px;
-  z-index: 999;
-  transition: transform 0.3s ease-in-out;
-}
-
-/* Default sidebar hide */
-.sidebar-toggle+.sidebar {
-  transform: translateX(-200px);
-}
-
-
-/* sidebar active */
-.sidebar.active {
-  transform: translateX(200px);
+.calHeight {
+    height: calc(100vh - 42px);
 }
 </style>

@@ -85,7 +85,13 @@ export const storeSettings = defineStore({
       storageSet("recordingTable", JSON.stringify(this.recordingTable));
     },
     insertBodyFatDatalist(record:object) {
+      record['id'] = this.bodyFatDatalist.length;
       this.bodyFatDatalist.push(record);
+      storageSet("bodyFatDatalist", JSON.stringify(this.bodyFatDatalist));
+    },
+    deleteBodyFatDatalist(record:object) {
+      const findIndex = this.bodyFatDatalist.findIndex(row=>row.id===record['id']);
+      this.bodyFatDatalist.splice(findIndex, 1);
       storageSet("bodyFatDatalist", JSON.stringify(this.bodyFatDatalist));
     },
     setGDriveToken(token: string) {

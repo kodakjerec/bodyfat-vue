@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="h-full">
         <!-- Accounts -->
         <div class="flex flex-wrap rounded bg-white m-2 p-2" tabindex="0">
             <div class="model_header">
@@ -29,8 +29,10 @@
                     <span class="w-1/4 text-center">顯示名稱</span>
                     <span class="w-1/4 text-center">資料型態</span>
                     <div class="w-1/4 text-center">
-                        操作
-                        <button class="btn text-xs" @click="addNewRow()">新增一筆</button>
+                        <div @click="addNewRow()">
+                            <add-item theme="filled" size="24" fill="#0000FF"/>
+                            <span class="text-blue-500">New</span>
+                        </div>
                     </div>
                 </div>
                 <template v-for="item of recordingTable" :key="item.id">
@@ -44,12 +46,15 @@
                             <option value="number">Number</option>
                         </select>
                         <div class="w-1/4 text-center">
-                            <button v-if="item.id>7" class="redBtn text-xs" @click="delRow(item.id)">刪除</button>
+                            <div class="items-center my-4" v-if="item.id>7" @click="delRow(item.id)">
+                                <delete theme="filled" size="24" fill="#FF0000"/>
+                                <span class="text-red-500">Delete</span>
+                            </div>
                         </div>
                     </label>
                 </template>
-                <button class="btn font-black w-full mt-10 h-20 text-4xl text-center" @click="saveRecordingTable">
-                    <span>S&nbsp;A&nbsp;V&nbsp;E</span>
+                <button class="btn font-black w-full my-4 h-20 text-4xl text-center" @click="saveRecordingTable">
+                    <save theme="filled" size="36" fill="#000000"/><span>SAVE</span>
                 </button>
             </div>
         </div>
@@ -57,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import { Minus, Plus } from "@icon-park/vue-next";
+import { Minus, Plus, Save, AddItem, Delete } from "@icon-park/vue-next";
 import { storeSettings, storeGoogleDrive, type recordModule } from '@/store/index';
 import { createToaster } from '@meforma/vue-toaster';
 import { accessToken, revokeToken } from '@/libs/gDrive';
@@ -65,7 +70,7 @@ import { accessToken, revokeToken } from '@/libs/gDrive';
 export default{
     name: "settings",
     components: {
-        Minus, Plus
+        Minus, Plus, Save, AddItem, Delete
     },
     data() {
         return {
