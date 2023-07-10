@@ -12,7 +12,7 @@
       <router-view v-if="nowPath === 'calendar'" name="calendar" @fromClick="(path) => nowPath = path" />
       <router-view v-if="nowPath === 'chart'" name="chart" @fromClick="(path) => nowPath = path" />
     </div>
-    <div id="app_footer" class="sticky bottom-0 w-full bg-white flex">
+    <div id="app_footer" class="sticky bottom-0 w-full flex">
       <div class="btn w-1/4 flex" @click="gotoPath('home')">
         <home theme="filled" size="24" fill="#000000"/><span>首頁</span>
       </div>
@@ -65,19 +65,6 @@ export default {
     gotoPath(path: string) {
       this.nowPath = path;
       storeSettings().setLastPath(this.nowPath);
-    },
-    /**
-     * Refresh the screen after being idle for a long time
-     */
-    handlePageFocus() {
-      const lastActiveTime: number = Number(this.lastActiveTime ?? new Date().getTime());
-      const currentTime: number = new Date().getTime();
-      const timeDiff: number = currentTime - lastActiveTime;
-      this.lastActiveTime = currentTime;
-      // 如果背景中放置的時間超過指定時間，就重新載入頁面
-      if (timeDiff > 60 * 60 * 1000) { // 60 分鐘
-        location.reload();
-      }
     }
   }
 }

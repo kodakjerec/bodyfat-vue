@@ -21,31 +21,42 @@ export const storeSettings = defineStore({
   id: "settings",
   state: () => ({
     secretKey: "kodak19890604", // secret key
-    recordingTable: [
-      {id:0,colName:"日期",colType:"datetime-local"},
-      {id:1,colName:"體重",colType:"number"},
-      {id:2,colName:"BMI",colType:"number"},
-      {id:3,colName:"體脂肪率",colType:"number"},
-      {id:4,colName:"肌肉量",colType:"number"},
-      {id:5,colName:"內臟脂肪",colType:"number"},
-      {id:6,colName:"體內年齡",colType:"number"},
-      {id:7,colName:"基礎代謝",colType:"number"}], // recording table
+    recordingTable: [], // recording table
     lastPath: "", // last visit page
     bodyFatDatalist:[],
     googleOAuth2token: "", // google OAuth2 token
     googleDriveFileName: "BodyFatRecorder.txt",
+    eChartSetting: {}
   }),
   getters: {
     getSecretKey(state) {
       return state.secretKey;
     },
+    getRecordingTableDefault() {
+      return [
+          {"id":0,"colName":"日期","colType":"datetime-local"},
+          {"id":1,"colName":"體重","colType":"number"},
+          {"id":2,"colName":"BMI","colType":"number"},
+          {"id":3,"colName":"體脂肪率","colType":"number"},
+          {"id":4,"colName":"肌肉量","colType":"number"},
+          {"id":5,"colName":"內臟脂肪","colType":"number"},
+          {"id":6,"colName":"體內年齡","colType":"number"},
+          {"id":7,"colName":"基礎代謝","colType":"number"},
+          {"id":8,"colName":"舒張壓","colType":"number"},
+          {"id":9,"colName":"收縮壓","colType":"number"},
+          {"id":10,"colName":"血糖","colType":"number"},
+      ];
+    },
     getRecordingTable(state) {
-      if (state.recordingTable.length===8) {
+      if (state.recordingTable.length===0) {
         const tempData = storageGet("recordingTable");
         if (tempData) {
           state.recordingTable = JSON.parse(tempData);
+        } else {
+          state.recordingTable = this.getRecordingTableDefault;
         }
       }
+
       return state.recordingTable;
     },
     getLastPath(state) {
@@ -55,6 +66,7 @@ export const storeSettings = defineStore({
           state.lastPath = tempData;
         }
       }
+
       return state.lastPath;
     },
     getBodyFatDataList(state) {
@@ -74,6 +86,9 @@ export const storeSettings = defineStore({
 
       return state.googleOAuth2token;
     },
+    getEChartSetting(state) {
+      return state.eChartSetting;
+    }
   },
   actions: {
     setLastPath(path: string) {
@@ -85,8 +100,12 @@ export const storeSettings = defineStore({
       storageSet("recordingTable", JSON.stringify(this.recordingTable));
     },
     insertBodyFatDatalist(record:object) {
-      record['id'] = this.bodyFatDatalist.length;
-      this.bodyFatDatalist.push(record);
+      let newRecord = {}
+      newRecord['id'] = this.bodyFatDatalist.length;
+      Object.keys(record).map(key=>{
+        newRecord[key]=record[key];
+      })
+      this.bodyFatDatalist.push(newRecord);
       storageSet("bodyFatDatalist", JSON.stringify(this.bodyFatDatalist));
     },
     deleteBodyFatDatalist(record:object) {
@@ -99,6 +118,9 @@ export const storeSettings = defineStore({
       const aesAPIKey = cryptoJS.AES.encrypt(token, this.getSecretKey).toString();
       storageSet("gToken", aesAPIKey, false);
     },
+    setEChartSetting(fromSetting:object) {
+      storageSet("eChartSetting", JSON.stringify(fromSetting));
+    }
   },
 });
 

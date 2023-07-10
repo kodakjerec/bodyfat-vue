@@ -36,33 +36,30 @@
                     </div>
                 </div>
                 <template v-for="item of recordingTable" :key="item.id">
-                    <label :for="item.colName" class="text-gray-700 mb2 flex mt-6">
-                        <span class="w-1/4 text-center">{{ item.id }}</span>
-                        <span v-if="item.id<8" class="w-1/4">{{ item.colName }}</span>
-                        <input v-else class="input w-1/4" type="text" v-model="item.colName">
-                        <select class="w-1/4" v-model="item.colType">
+                    <label :for="item.colName" class="text-gray-700 flex m-3">
+                        <span class="w-1/6 text-center self-center">{{ item.id }}</span>
+                        <span v-if="item.id<8" class="w-1/3 text-center">{{ item.colName }}</span>
+                        <input v-else class="input w-1/3 self-center" type="text" v-model="item.colName" @change="saveRecordingTable()">
+                        <select class="w-1/3" v-model="item.colType" @change="saveRecordingTable()">
                             <option value="text">Text</option>
                             <option value="datetime-local">Date</option>
                             <option value="number">Number</option>
                         </select>
-                        <div class="w-1/4 text-center">
+                        <div class="w-1/6 text-center">
                             <div class="items-center my-4" v-if="item.id>7" @click="delRow(item.id)">
                                 <delete theme="filled" size="24" fill="#FF0000"/>
-                                <span class="text-red-500">Delete</span>
                             </div>
                         </div>
                     </label>
                 </template>
-                <button class="btn font-black w-full my-4 h-20 text-4xl text-center" @click="saveRecordingTable">
-                    <save theme="filled" size="36" fill="#000000"/><span>SAVE</span>
-                </button>
+                <div class="btn w-10" @click="resetRecordingTable">預設</div>
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { Minus, Plus, Save, AddItem, Delete } from "@icon-park/vue-next";
+import { Minus, Plus, AddItem, Delete } from "@icon-park/vue-next";
 import { storeSettings, storeGoogleDrive, type recordModule } from '@/store/index';
 import { createToaster } from '@meforma/vue-toaster';
 import { accessToken, revokeToken } from '@/libs/gDrive';
@@ -70,7 +67,7 @@ import { accessToken, revokeToken } from '@/libs/gDrive';
 export default{
     name: "settings",
     components: {
-        Minus, Plus, Save, AddItem, Delete
+        Minus, Plus, AddItem, Delete
     },
     data() {
         return {
@@ -113,14 +110,16 @@ export default{
                 colType:"text"
             };
             this.recordingTable.push(newObj);
+            this.saveRecordingTable();
         },
         delRow(fromId:number) {
             const findIndex = this.recordingTable.findIndex(item=>item.id===fromId);
             if (findIndex>=0) this.recordingTable.splice(findIndex,1);
+            this.saveRecordingTable(`刪除成功`);
         },
-        saveRecordingTable() {
+        saveRecordingTable(msg:string=`儲存成功`) {
             storeSettings().setRecordingTable(this.recordingTable);
-            createToaster().success(`儲存成功`, { position: "top", duration: 2000 });
+            createToaster().success(msg, { position: "top", duration: 2000 });
         },
         // Google Login
         showEvents() {
@@ -133,6 +132,10 @@ export default{
         revokeToken() {
             revokeToken();
             createToaster().success(`Log Out!`, { position: "top", duration: 2000 });
+        },
+        resetRecordingTable() {
+            this.recordingTable = storeSettings().getRecordingTableDefault;
+            this.saveRecordingTable(`還原預設`);
         }
     }
 }

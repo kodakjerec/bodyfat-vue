@@ -1,10 +1,12 @@
 <template>
-    <div ref="eChart" :style="{width: '90vw', height: '80vh'}">
+    <div class="relative h-5/6 overflow-hidden" ref="eChart-container">
     </div>
 </template>
 
 <script lang="ts">
 import * as echarts from 'echarts'
+import { markRaw, toRaw } from 'vue'
+import { storeSettings } from '@/store'
 
 export default {
     name: "eChart1",
@@ -17,140 +19,111 @@ export default {
     data() {
         return {
             eChart: null,
+            eChartSetting: null,
             option: {
-                animation: false,
-                legend: {
-                    bottom: 10,
-                    left: 'center',
-                    data: ['Dow-Jones index', 'MA5', 'MA10', 'MA20', 'MA30']
+                title: {
                 },
                 tooltip: {
                     trigger: 'axis',
-                    axisPointer: {
-                    type: 'cross'
-                    },
-                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                    position: function (pos, params, el, elRect, size) {
-                    var obj = { top: 10 };
-                    obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
-                    return obj;
-                    },
-                    extraCssText: 'width: 170px'
+                    renderMode: 'richText'
                 },
-                axisPointer: {
-                    link: { xAxisIndex: 'all' },
-                    label: {
-                    backgroundColor: '#777'
-                    }
+                legend: {
+                    selectedMode: true,
+                    selected: {},
+                    itemWidth: 40,
+                    itemHeight: 20
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
                 },
                 toolbox: {
-                    feature: {
-                    dataZoom: {
-                        yAxisIndex: false
-                    },
-                    brush: {
-                        type: ['lineX', 'clear']
-                    }
-                    }
                 },
-                brush: {
-                    xAxisIndex: 'all',
-                    brushLink: 'all',
-                    outOfBrush: {
-                    colorAlpha: 0.1
-                    }
-                },
-                grid: [
-                    {
-                    left: '10%',
-                    right: '8%',
-                    height: '50%'
-                    },
-                    {
-                    left: '10%',
-                    right: '8%',
-                    bottom: '20%',
-                    height: '15%'
-                    }
-                ],
-                xAxis: [
-                    {
+                xAxis: {
                     type: 'category',
-                    data: ["1","2","3"],
-                    scale: true,
-                    boundaryGap: false,
-                    axisLine: { onZero: false },
-                    splitLine: { show: false },
-                    splitNumber: 20,
-                    min: 'dataMin',
-                    max: 'dataMax',
-                    axisPointer: {
-                        z: 100
-                    }
-                    }
-                ],
-                yAxis: [
-                    {
-                    scale: true,
-                    splitArea: {
-                        show: true
-                    }
-                    },
-                    {
-                    scale: true,
-                    gridIndex: 1,
-                    splitNumber: 2,
-                    axisLabel: { show: false },
-                    axisLine: { show: false },
-                    axisTick: { show: false },
-                    splitLine: { show: false }
-                    }
-                ],
-                dataZoom: [
-                    {
-                    type: 'inside',
-                    xAxisIndex: [0, 1],
-                    start: 98,
-                    end: 100
-                    },
-                    {
-                    show: true,
-                    xAxisIndex: [0, 1],
-                    type: 'slider',
-                    top: '85%',
-                    start: 98,
-                    end: 100
-                    }
-                ],
-                series: [
-                    {
-                    name: 'Dow-Jones index',
-                    type: 'candlestick',
-                    data: ["4","5","6"],
-                    itemStyle: {
-                        normal: {
-                        color: '#06B800',
-                        color0: '#FA0000',
-                        borderColor: null,
-                        borderColor0: null
-                        }
-                    },
-                    },
-                ]
+                    boundaryGap: false
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: []
             }
         }
     },
     async mounted() {
-        console.log(this.$refs["eChart"])
-        this.eChart = echarts.init(this.$refs["eChart"])
-        await this.preLoading()
-
-        this.eChart.setOption(this.option)
+        await this.preLoading();
+        this.eChart = markRaw(echarts.init(this.$refs["eChart-container"]));
+        this.eChart.setOption(this.option);
+        this.eChart.on('legendselectchanged', this.legendselectchanged);
+    },
+    created() {
+        window.addEventListener('resize', this.resizeHandler);
+    },
+    destroyed() {
+        window.removeEventListener('resize', this.resizeHandler);
     },
     methods: {
         preLoading() {
+            const recordingTable:Array<any> = storeSettings().getRecordingTable;
+            let originData = Array.from(toRaw(storeSettings().getBodyFatDataList));
+            // 曲線
+            let contentList = {};
+            recordingTable.map(row=>{
+                contentList[row.colName]=[];
+            })
 
+            originData = originData.sort((a, b)=> {
+                const date1 = new Date(a['日期']);
+                const date2 = new Date(b['日期']);
+                const dateDiff = date2.getTime() - date1.getTime();
+                if (dateDiff>0) return -1;
+                else if(dateDiff<0) return 1;
+                else return 0;
+            });
+            
+            originData.map(row=>{
+                Object.entries(row).map(([key,value])=>{
+                    if (contentList[key]) {
+                        contentList[key].push(value);
+                    }
+                });
+            });
+
+            Object.entries(contentList).map(([key,value])=>{
+                if (key==='日期') {
+                    this.option.xAxis.data = contentList[key];
+                } else {
+                    this.option.series.push({
+                        name: key,
+                        type: 'line',
+                        stack: 'Total',
+                        data: value
+                    })
+                }
+            });
+
+            // loading echart settings
+            this.eChartSetting = storeSettings().getEChartSetting;
+            if (this.eChartSetting.selected) {
+                this.option.legend.selected = this.eChartSetting.selected;
+            }
+        },
+        resizeHandler() {
+            this.eChart.resize();
+        },
+        legendselectchanged(param) {
+            this.eChartSetting.selected = param.selected;
+            storeSettings().setEChartSetting(this.eChartSetting);
         }
     }
 }
 </script>
+
+<style scoped>
+#chart-container {
+  position: relative;
+  overflow: hidden;
+}
+</style>

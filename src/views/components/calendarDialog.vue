@@ -3,24 +3,26 @@
     <div>
         <div class="fixed left-0 top-0 w-full h-full bg-slate-100 opacity-90" @click="clickWhiteSpace">
         </div>
-        <div class="fixed m-6 top-20 p-2 bg-white rounded border border-black self-center" :class="{'shockWindow':shockWindow}">
-            <div id="model_header" class="relative justify-center">
-                <p class="text-2xl font-bold mt-2 text-center">{{ myTitle }}</p>
-                <close class="absolute top-0 right-0" theme="filled" size="24" fill="#000000" @click="closeDialog('')"/>
-            </div>
-            <div id="model_content">
-                <template v-for="item of recordingTable" :key="item.id">
-                    <label :for="item.colName" class="text-gray-700 mb2 flex mt-2">
-                        <span class="label-xl w-1/3">{{ item.colName }}</span>
-                        <input v-if="item.colType==='datetime-local'" :id="item.colName" class="input text-lg w-1/2" v-model="recorder[item.colName]" @focus="$event.target?.select()" disabled>
-                        <input v-else :type="item.colType" :id="item.colName" class="input w-1/2" v-model="recorder[item.colName]" @focus="$event.target?.select()" disabled>
-                    </label>
-                </template>
-            </div>
-            <div id="model_footer">
-                <div class="m-2" @click="deleteItem">
-                    <delete theme="filled" size="24" fill="#FF0000"/>
-                    <span class="text-red-500">Delete</span>
+        <div class="fixed top-10 w-full text-center px-6">
+            <div class="p-2 bg-white rounded border border-black" :class="{'shockWindow':shockWindow}">
+                <div id="model_header" class="relative justify-center">
+                    <p class="text-2xl font-bold mt-2 text-center">{{ myTitle }}</p>
+                    <close class="absolute top-0 right-0" theme="filled" size="24" fill="#000000" @click="closeDialog('')"/>
+                </div>
+                <div id="model_content">
+                    <template v-for="item of recordingTable" :key="item.id">
+                        <label :for="item.colName" class="text-gray-700 mb2 flex mt-2">
+                            <span class="label-xl w-1/3">{{ item.colName }}</span>
+                            <input v-if="item.colType==='datetime-local'" :id="item.colName" class="input text-lg w-1/2" v-model="recorder[item.colName]" @focus="$event.target?.select()" disabled>
+                            <input v-else :type="item.colType" :id="item.colName" class="input w-1/2" v-model="recorder[item.colName]" @focus="$event.target?.select()" disabled>
+                        </label>
+                    </template>
+                </div>
+                <div id="model_footer">
+                    <div class="m-2" @click="deleteItem">
+                        <delete theme="filled" size="24" fill="#FF0000"/>
+                        <span class="text-red-500">Delete</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -94,6 +96,6 @@ export default{
 
 <style lang="scss" scoped>
 .shockWindow {
-    @apply m-5;
+    @apply m-1;
 }
 </style>
