@@ -119,7 +119,7 @@ export default{
         },
         saveRecordingTable(msg:string=`儲存成功`) {
             storeSettings().setRecordingTable(this.recordingTable);
-            createToaster().success(msg, { position: "top", duration: 2000 });
+            createToaster().success(msg, { position: "top", duration: 1000 });
         },
         // Google Login
         showEvents() {

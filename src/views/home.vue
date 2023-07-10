@@ -5,10 +5,10 @@
             <weight theme="filled" size="24" fill="#000000" @click="randomValue"/>
         </div>
         <template v-for="item of recordingTable" :key="item.id">
-            <label :for="item.colName" class="text-gray-700 mb2 flex mt-2">
+            <label :for="item.colName" class="text-gray-700 flex mt-2">
                 <span class="label-xl w-1/3">{{ item.colName }}</span>
-                <input v-if="item.colType==='datetime-local'" :id="item.colName" class="input text-lg w-1/2" v-model="recorder[item.colName]" @focus="$event.target?.select()">
-                <input v-else :type="item.colType" :id="item.colName" class="input w-1/2" v-model="recorder[item.colName]" @focus="$event.target?.select()">
+                <input v-if="item.colType==='datetime-local'" :id="item.colName" class="input text-lg w-1/2" v-model="recorder[item.colName]" @focus="inputFocus($event)" :disabled="saving">
+                <input v-else :type="item.colType" :id="item.colName" class="input w-1/2" v-model="recorder[item.colName]" @focus="inputFocus($event)" :disabled="saving">
             </label>
         </template>
         <button class="btn font-black w-full my-4 h-20 text-4xl text-center" @click="save" :disabled="saving">
@@ -20,7 +20,7 @@
 import { Save, Weight } from "@icon-park/vue-next";
 import { storeSettings, type recordModule } from '@/store';
 import { createToaster } from '@meforma/vue-toaster';
-import dayjs from 'dayjs'
+import dayjs from 'dayjs';
 
 export default {
     name: 'home',
@@ -47,7 +47,7 @@ export default {
                     case "number":
                         this.recorder[item.colName]=0;break;
                     case "datetime-local":
-                        this.recorder[item.colName]=dayjs().format().substring(0,16);break;
+                        this.recorder[item.colName]=dayjs().format("YYYY-MM-DDTHH:mm");break;
                 }
             })
         },
@@ -82,7 +82,7 @@ export default {
                     case "number":
                         this.recorder[item.colName]=Math.round(Math.random() * 200);break;
                     case "datetime-local":
-                        this.recorder[item.colName]=dayjs(resultDate).format().substring(0,16);break;
+                        this.recorder[item.colName]=dayjs(resultDate).format("YYYY-MM-DDTHH:mm");break;
                 }
             })
         },
@@ -95,13 +95,19 @@ export default {
 
             if(errorMsg.length>0) {
                 createToaster().error(errorMsg, { position: "top", duration: 2000 });
+                return;
             }
             
+            storeSettings().nowLoading = "Loading";
             storeSettings().insertBodyFatDatalist(this.recorder);
-            createToaster().success(`儲存成功`, { position: "top", duration: 2000, onClose: () => {
+            createToaster().success(`儲存成功`, { position: "top", duration: 1000, onClose: () => {
                 this.saving = false;
                 this.reset();
+                storeSettings().nowLoading = "";
             } });
+        },
+        inputFocus(event:any) {
+            event.target.select();
         }
     }
 }

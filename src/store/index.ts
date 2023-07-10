@@ -26,12 +26,10 @@ export const storeSettings = defineStore({
     bodyFatDatalist:[],
     googleOAuth2token: "", // google OAuth2 token
     googleDriveFileName: "BodyFatRecorder.txt",
-    eChartSetting: {}
+    eChartSetting: {},
+    nowLoading: "" // for local
   }),
   getters: {
-    getSecretKey(state) {
-      return state.secretKey;
-    },
     getRecordingTableDefault() {
       return [
           {"id":0,"colName":"日期","colType":"datetime-local"},
@@ -64,6 +62,8 @@ export const storeSettings = defineStore({
         const tempData = storageGet("lastPath");
         if (tempData) {
           state.lastPath = tempData;
+        } else {
+          state.lastPath = 'settings';
         }
       }
 
@@ -85,9 +85,6 @@ export const storeSettings = defineStore({
       }
 
       return state.googleOAuth2token;
-    },
-    getEChartSetting(state) {
-      return state.eChartSetting;
     }
   },
   actions: {
@@ -115,7 +112,7 @@ export const storeSettings = defineStore({
     },
     setGDriveToken(token: string) {
       this.googleOAuth2token = token;
-      const aesAPIKey = cryptoJS.AES.encrypt(token, this.getSecretKey).toString();
+      const aesAPIKey = cryptoJS.AES.encrypt(token, this.secretKey).toString();
       storageSet("gToken", aesAPIKey, false);
     },
     setEChartSetting(fromSetting:object) {
@@ -123,6 +120,10 @@ export const storeSettings = defineStore({
     }
   },
 });
+
+
+// 不要同步的資料
+const notMapAttr = ["gToken"];
 
 export const storeGoogleDrive = defineStore({
   id: "googleDrive",
@@ -136,7 +137,14 @@ export const storeGoogleDrive = defineStore({
     async localStorageToCloud() {
       const token = storeSettings().getGDriveToken;
       if (token) {
-        const saveData = JSON.stringify(localStorage);
+        // 準備資料
+        const filterData = JSON.parse(JSON.stringify(localStorage));
+        notMapAttr.map(attr=>{
+          delete filterData[attr];
+        })
+        const saveData = JSON.stringify(filterData);
+
+        // 開始上傳
         const fileName = storeSettings().googleDriveFileName;
         // check file exists on google-drive
         const fileId = await gDriveCheck(fileName);
@@ -166,7 +174,7 @@ export const storeGoogleDrive = defineStore({
     async cloundToLocalStorage() {
       const token = storeSettings().getGDriveToken;
       if (token) {
-        // use google drive
+        // 取得資料
         const fileName = storeSettings().googleDriveFileName;
         // check file exists on google-drive
         const fileId = await gDriveCheck(fileName);
@@ -175,7 +183,6 @@ export const storeGoogleDrive = defineStore({
           const fileContent = await gDriveLoad(fileId);
           if (fileContent) {
             const cloudData = JSON.parse(fileContent);
-            const notMapAttr = ["gToken"];
             Object.entries(cloudData).map(([key, value]) => {
               if (!notMapAttr.includes(key)) {
                 storageSet(key, value, false);

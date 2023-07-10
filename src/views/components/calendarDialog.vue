@@ -11,7 +11,7 @@
                 </div>
                 <div id="model_content">
                     <template v-for="item of recordingTable" :key="item.id">
-                        <label :for="item.colName" class="text-gray-700 mb2 flex mt-2">
+                        <label :for="item.colName" class="text-gray-700 flex mt-2">
                             <span class="label-xl w-1/3">{{ item.colName }}</span>
                             <input v-if="item.colType==='datetime-local'" :id="item.colName" class="input text-lg w-1/2" v-model="recorder[item.colName]" @focus="$event.target?.select()" disabled>
                             <input v-else :type="item.colType" :id="item.colName" class="input w-1/2" v-model="recorder[item.colName]" @focus="$event.target?.select()" disabled>

@@ -37,7 +37,7 @@ export default {
     },
     data() {
         return {
-            showDate: this.thisMonth(1),
+            showDate: new Date(),
             showDialog: false,
             dialogItem: {},
             oldDataList: [],
@@ -99,11 +99,6 @@ export default {
             })
         },
         // === vue-simple-calendar 必要 ===
-        //  官方提供的計算日期
-        thisMonth(d, h, m) {
-            const t = new Date();
-            return new Date(t.getFullYear(), t.getMonth(), d, h||0, m||0);
-        },
         // 設定日期, 必要函數
         setShowDate(event) {
             this.showDate = event;

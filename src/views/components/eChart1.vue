@@ -5,7 +5,7 @@
 
 <script lang="ts">
 import * as echarts from 'echarts'
-import { markRaw, toRaw } from 'vue'
+import { markRaw } from 'vue'
 import { storeSettings } from '@/store'
 
 export default {
@@ -48,14 +48,18 @@ export default {
                 yAxis: {
                     type: 'value'
                 },
-                series: []
+                series: [],
             }
         }
     },
-    async mounted() {
-        await this.preLoading();
+    watch: {
+        fromData() {
+            this.preLoading();
+            this.eChart.setOption(this.option);
+        }
+    },
+    mounted() {
         this.eChart = markRaw(echarts.init(this.$refs["eChart-container"]));
-        this.eChart.setOption(this.option);
         this.eChart.on('legendselectchanged', this.legendselectchanged);
     },
     created() {
@@ -66,15 +70,18 @@ export default {
     },
     methods: {
         preLoading() {
+            // reset
+            this.option.series = [];
+
             const recordingTable:Array<any> = storeSettings().getRecordingTable;
-            let originData = Array.from(toRaw(storeSettings().getBodyFatDataList));
+            let originData = Array.from(this.fromData);
             // 曲線
             let contentList = {};
             recordingTable.map(row=>{
                 contentList[row.colName]=[];
             })
 
-            originData = originData.sort((a, b)=> {
+            originData = originData.sort((a:any, b:any)=> {
                 const date1 = new Date(a['日期']);
                 const date2 = new Date(b['日期']);
                 const dateDiff = date2.getTime() - date1.getTime();
@@ -83,7 +90,7 @@ export default {
                 else return 0;
             });
             
-            originData.map(row=>{
+            originData.map((row)=>{
                 Object.entries(row).map(([key,value])=>{
                     if (contentList[key]) {
                         contentList[key].push(value);
@@ -105,7 +112,7 @@ export default {
             });
 
             // loading echart settings
-            this.eChartSetting = storeSettings().getEChartSetting;
+            this.eChartSetting = storeSettings().eChartSetting;
             if (this.eChartSetting.selected) {
                 this.option.legend.selected = this.eChartSetting.selected;
             }
