@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <template v-for="item of recordingTable" :key="item.id">
-                    <label :for="item.colName" class="text-gray-700 flex m-3">
+                    <label :for="item.colName" class="text-gray-700 flex m-3 h-6">
                         <span class="w-1/6 text-center self-center">{{ item.id }}</span>
                         <span v-if="item.id < 8" class="w-1/3 text-center">{{ item.colName }}</span>
                         <input v-else class="input w-1/3 self-center" type="text" v-model="item.colName" @change="saveRecordingTable()">
@@ -46,8 +46,8 @@
                             <option value="number">Number</option>
                         </select>
                         <div class="w-1/6 text-center">
-                            <div class="items-center my-4" v-if="item.id > 7" @click="delRow(item.id)">
-                                <delete theme="filled" size="24" fill="#FF0000" />
+                            <div class="items-center" v-if="item.id > 7" @click="delRow(item.id)">
+                                <delete theme="filled" size="22" fill="#FF0000" />
                             </div>
                         </div>
                     </label>

@@ -16,6 +16,6 @@
     @apply text-xl text-center flex-grow
   }
   .input {
-    @apply py-2 text-xl text-center text-gray-700 bg-white border rounded-md focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 flex-grow;
+    @apply text-xl text-center text-gray-700 bg-white border rounded-md focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 flex-grow;
   }
 }

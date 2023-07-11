@@ -5,13 +5,13 @@
             <weight theme="filled" size="24" fill="#000000" @click="randomValue"/>
         </div>
         <template v-for="item of recordingTable" :key="item.id">
-            <label :for="item.colName" class="text-gray-700 flex mt-2">
+            <label :for="item.colName" class="text-gray-700 flex mt-1">
                 <span class="label-xl w-1/3">{{ item.colName }}</span>
-                <input v-if="item.colType==='datetime-local'" :id="item.colName" class="input text-lg w-1/2" v-model="recorder[item.colName]" @focus="inputFocus($event)" :disabled="saving">
-                <input v-else :type="item.colType" :id="item.colName" class="input w-1/2" v-model="recorder[item.colName]" @focus="inputFocus($event)" :disabled="saving">
+                <input v-if="item.colType==='datetime-local'" :id="item.colName" class="input py-2 text-lg w-1/2" v-model="recorder[item.colName]" @focus="inputFocus($event)" :disabled="saving">
+                <input v-else :type="item.colType" :id="item.colName" class="input py-2 w-1/2" v-model="recorder[item.colName]" @focus="inputFocus($event)" :disabled="saving">
             </label>
         </template>
-        <button class="btn font-black w-full my-4 h-20 text-4xl text-center" @click="save" :disabled="saving">
+        <button class="btn font-black w-full mt-1 text-4xl text-center" @click="save" :disabled="saving">
             <save theme="filled" size="36" fill="#000000"/><span>SAVE</span>
         </button>
     </div>
