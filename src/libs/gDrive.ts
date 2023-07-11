@@ -43,44 +43,41 @@ export function revokeToken() {
  * @returns 使用者id
  */
 async function getUserInfo() {
-  const response = await fetch(
-    'https://www.googleapis.com/oauth2/v3/tokeninfo',
-    {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + storeSettings().getGDriveToken,
-      },
-    }
-  );
+  const response = await fetch("https://www.googleapis.com/oauth2/v3/tokeninfo", {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + storeSettings().getGDriveToken,
+    },
+  });
   const { body, status } = response;
-    if (body) {
-      const reader = body.getReader();
-      const decoder = new TextDecoder("utf-8");
+  if (body) {
+    const reader = body.getReader();
+    const decoder = new TextDecoder("utf-8");
 
-      while (true) {
-        // eslint-disable-next-line no-await-in-loop
-        const { done, value } = await reader.read();
-        if (done) break;
+    while (true) {
+      // eslint-disable-next-line no-await-in-loop
+      const { done, value } = await reader.read();
+      if (done) break;
 
-        const decodedText = decoder.decode(value, { stream: true });
-        const json = JSON.parse(decodedText); // start with "data: "
-        if (status !== 200) {
-          const content = json.error.message ?? decodedText;
-          clearToken(status);
-          return "";
-        } else {
-          return decodedText.sub;
-        }
+      const decodedText = decoder.decode(value, { stream: true });
+      const json = JSON.parse(decodedText); // start with "data: "
+      if (status !== 200) {
+        const content = json.error.message ?? decodedText;
+        clearToken(status);
+        return "";
+      } else {
+        return decodedText.sub;
       }
     }
+  }
 }
 
 export async function gDriveCheck(fileName: string) {
   try {
     const response = await fetch(
-      'https://www.googleapis.com/drive/v3/files?trashed=false&q=trashed=false and fullText contains "' +
+      'https://www.googleapis.com/drive/v3/files?q=trashed=false and fullText contains "' +
         fileName +
-        '"',
+        '"&includeLabels=',
       {
         method: "GET",
         headers: {
@@ -116,6 +113,41 @@ export async function gDriveCheck(fileName: string) {
     console.log(e);
     createToaster().error("Failed to check data list", { position: "top" });
     return "error";
+  }
+}
+export async function gDriveCheckLabels(fileId: string) {
+  try {
+    const fields: string = "modifiedTime";
+    const response = await fetch("https://www.googleapis.com/drive/v3/files/" + fileId + "?fields=" + fields, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + storeSettings().getGDriveToken,
+      },
+    });
+    const { body, status } = response;
+    if (body) {
+      const reader = body.getReader();
+      const decoder = new TextDecoder("utf-8");
+      while (true) {
+        // eslint-disable-next-line no-await-in-loop
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const decodedText = decoder.decode(value, { stream: true });
+        if (status !== 200) {
+          const json = JSON.parse(decodedText); // start with "data: "
+          const content = json.error.message ?? decodedText;
+          clearToken(status);
+          return false;
+        } else {
+          return decodedText;
+        }
+      }
+    }
+  } catch (e: any) {
+    console.log(e);
+    createToaster().error("Failed to load data", { position: "top" });
+    return false;
   }
 }
 export async function gDrivePatch(contentString: string, fileName: string, fileId: string) {
@@ -243,6 +275,7 @@ export async function gDriveLoad(fileId: string) {
 function clearToken(status) {
   // clean token
   storeSettings().setGDriveToken("");
+  storeSettings().setIsSync(false);
 
   if (status === 401) {
     // refresh
