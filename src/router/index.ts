@@ -1,10 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory('/'),
   routes: [
     {
-      path: "/",
+      path: '/',
+      redirect: { name: 'home' }
+    },
+    {
+      path: "/bodyfatrecorder/",
       name: "home",
       components:{
         home: () => import("@/views/home.vue"),
