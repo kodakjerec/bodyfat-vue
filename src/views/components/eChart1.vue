@@ -73,33 +73,33 @@ export default {
             // reset
             this.option.series = [];
 
-            const recordingTable:Array<any> = storeSettings().getRecordingTable;
+            const recordingTable: Array<any> = storeSettings().getRecordingTable;
             let originData = Array.from(this.fromData);
             // 曲線
             let contentList = {};
-            recordingTable.map(row=>{
-                contentList[row.colName]=[];
+            recordingTable.map(row => {
+                contentList[row.colName] = [];
             })
 
-            originData = originData.sort((a:any, b:any)=> {
+            originData = originData.sort((a: any, b: any) => {
                 const date1 = new Date(a['日期']);
                 const date2 = new Date(b['日期']);
                 const dateDiff = date2.getTime() - date1.getTime();
-                if (dateDiff>0) return -1;
-                else if(dateDiff<0) return 1;
+                if (dateDiff > 0) return -1;
+                else if (dateDiff < 0) return 1;
                 else return 0;
             });
-            
-            originData.map((row)=>{
-                Object.entries(row).map(([key,value])=>{
+
+            originData.map((row: any) => {
+                Object.entries(row).map(([key, value]) => {
                     if (contentList[key]) {
                         contentList[key].push(value);
                     }
                 });
             });
 
-            Object.entries(contentList).map(([key,value])=>{
-                if (key==='日期') {
+            Object.entries(contentList).map(([key, value]) => {
+                if (key === '日期') {
                     this.option.xAxis.data = contentList[key];
                 } else {
                     this.option.series.push({
@@ -130,7 +130,7 @@ export default {
 
 <style scoped>
 #chart-container {
-  position: relative;
-  overflow: hidden;
+    position: relative;
+    overflow: hidden;
 }
 </style>
