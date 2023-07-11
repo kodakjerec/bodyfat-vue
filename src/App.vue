@@ -6,7 +6,7 @@
       <div class="inset-x-20 top-1/2 absolute font-black text-2xl text-center">{{ nowLoading }}</div>
     </div>
     <!-- Content -->
-    <div id="app_content" class="calHeight w-full">
+    <div id="app_content" class="calHeight w-full overflow-y-scroll">
       <router-view v-if="nowPath === 'home'" name="home" />
       <router-view v-if="nowPath === 'calendar'" name="calendar" />
       <router-view v-if="nowPath === 'chart'" name="chart" />
