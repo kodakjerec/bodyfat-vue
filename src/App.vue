@@ -11,7 +11,6 @@
       <router-view v-if="nowPath === 'calendar'" name="calendar" />
       <router-view v-if="nowPath === 'chart'" name="chart" />
       <router-view v-if="nowPath === 'settings'" name="settings" />
-      <div class="h-14"></div>
     </div>
     <div id="app_footer" class="relative bottom-0 w-full flex">
       <div class="btn w-1/4 flex" @click="gotoPath('home')">
