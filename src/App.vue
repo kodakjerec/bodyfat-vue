@@ -7,10 +7,10 @@
     </div>
     <!-- Content -->
     <div id="app_content" class="calHeight w-full">
-      <router-view v-if="nowPath === 'home'" name="home" @fromClick="(path) => nowPath = path" />
-      <router-view v-if="nowPath === 'calendar'" name="calendar" @fromClick="(path) => nowPath = path" />
-      <router-view v-if="nowPath === 'chart'" name="chart" @fromClick="(path) => nowPath = path" />
-      <router-view v-if="nowPath === 'settings'" name="settings" @fromClick="(path) => nowPath = path" />
+      <router-view v-if="nowPath === 'home'" name="home" />
+      <router-view v-if="nowPath === 'calendar'" name="calendar" />
+      <router-view v-if="nowPath === 'chart'" name="chart" />
+      <router-view v-if="nowPath === 'settings'" name="settings" />
     </div>
     <div id="app_footer" class="sticky bottom-0 w-full flex">
       <div class="btn w-1/4 flex" @click="gotoPath('home')">
