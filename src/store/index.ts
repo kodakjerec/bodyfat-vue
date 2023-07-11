@@ -173,7 +173,7 @@ export const storeGoogleDrive = defineStore({
             const lastModifiedTime: any = await gDriveCheckLabels(fileId);
 
             // TODO 詢問使用者是否覆蓋
-            if (lastModifiedTime) {
+            if (lastModifiedTime.modifiedTime) {
               const result = await Swal.fire({
                 title: "覆蓋雲端紀錄？雲端更新日期：" + lastModifiedTime.modifiedTime,
                 showCancelButton: true,
@@ -224,9 +224,9 @@ export const storeGoogleDrive = defineStore({
             const lastModifiedTime: any = await gDriveCheckLabels(fileId);
 
             // TODO 詢問使用者是否覆蓋
-            if (lastModifiedTime) {
+            if (lastModifiedTime.modifiedTime) {
               const result = await Swal.fire({
-                title: "覆蓋本地紀錄？雲端更新日期：" + lastModifiedTime,
+                title: "覆蓋本地紀錄？雲端更新日期：" + lastModifiedTime.modifiedTime,
                 showCancelButton: true,
                 confirmButtonText: "是",
               });
