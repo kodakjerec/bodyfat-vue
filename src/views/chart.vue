@@ -2,7 +2,7 @@
     <!-- search -->
     <div id="search_content">
         <div>
-            <label class="text-gray-700 flex items-center">
+            <label class="flex items-center">
                 <span class="label-xl w-1/6">日期</span>
                 <input type="date" class="input text-base w-1/3" v-model="startDate" :max="today">
                 <span>~</span>

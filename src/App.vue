@@ -1,9 +1,9 @@
 <template>
-  <div class="bg-gray-100 flex flex-col grow h-screen overflow-x-hidden">
+  <div class="bg-slate-900 text-gray-400 flex flex-col grow h-screen overflow-x-hidden">
     <div id="app_header"></div>
     <!-- nowLoading -->
-    <div v-if="nowLoading" class="absolute w-full h-screen bg-slate-100 opacity-90 z-10">
-      <div class="inset-x-20 top-1/2 absolute font-black text-2xl text-center">{{ nowLoading }}</div>
+    <div v-if="nowLoading" class="absolute w-full h-screen bg-slate-900 opacity-90 z-10">
+      <div class="inset-x-20 top-1/2 absolute text-gray-400 text-2xl text-center">{{ nowLoading }}</div>
     </div>
     <!-- Content -->
     <div id="app_content" class="calHeight w-full overflow-y-scroll">
@@ -14,16 +14,16 @@
     </div>
     <div id="app_footer" class="relative bottom-0 w-full flex">
       <div class="btn w-1/4 flex" @click="gotoPath('home')">
-        <home theme="filled" size="24" fill="#000000"/><span>首頁</span>
+        <home theme="two-tone" size="24" :fill="['#fff' ,'#000']"/><span>首頁</span>
       </div>
       <div class="btn w-1/4 flex" @click="gotoPath('calendar')">
-        <calendarDot theme="filled" size="24" fill="#000000"/><span>日曆</span>
+        <calendarDot theme="two-tone" size="24" :fill="['#fff' ,'#000']"/><span>日曆</span>
       </div>
       <div class="btn w-1/4 flex" @click="gotoPath('chart')">
-        <chartHistogram theme="filled" size="24" fill="#000000"/><span>圖表</span>
+        <chartHistogram theme="two-tone" size="24" :fill="['#fff' ,'#000']"/><span>圖表</span>
       </div>
       <div class="btn w-1/4 flex" @click="gotoPath('settings')">
-        <setting theme="filled" size="24" fill="#000000"/><span>設定</span></div>
+        <setting theme="two-tone" size="24" :fill="['#fff' ,'#000']"/><span>設定</span></div>
     </div>
   </div>
 </template>

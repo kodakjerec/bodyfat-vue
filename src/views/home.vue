@@ -2,17 +2,17 @@
     <div class="h-full">
         <div class="flex justify-center items-center">
             <p class="text-2xl font-bold text-center mt-2">體脂紀錄</p>
-            <weight theme="filled" size="24" fill="#000000" @click="randomValue" />
+            <weight theme="two-tone" size="24" :fill="['#fff' ,'#000']" @click="randomValue" />
         </div>
         <template v-for="item of recordingTable" :key="item.id">
-            <label :for="item.colName" class="text-gray-700 flex mt-1">
+            <label :for="item.colName" class="flex mt-1">
                 <span class="label-xl w-1/3">{{ item.colName }}</span>
                 <input v-if="item.colType === 'datetime-local'" :type="item.colType" :id="item.colName" class="input py-2 text-lg w-1/2" v-model="recorder[item.colName]" @focus="inputFocus($event)" :disabled="saving">
                 <input v-else :type="item.colType" :id="item.colName" class="input py-2 w-1/2" v-model="recorder[item.colName]" @focus="inputFocus($event)" :disabled="saving">
             </label>
         </template>
         <button class="btn font-black w-full mt-1 text-4xl text-center" @click="save" :disabled="saving">
-            <save theme="filled" size="36" fill="#000000" /><span>SAVE</span>
+            <save theme="two-tone" size="36" :fill="['#fff' ,'#000']" /><span>SAVE</span>
         </button>
     </div>
 </template>

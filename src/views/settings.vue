@@ -1,12 +1,12 @@
 <template>
     <div class="h-full">
         <!-- Accounts -->
-        <div class="flex flex-wrap rounded bg-white m-2 p-2" tabindex="0">
+        <div class="flex flex-wrap rounded bg-slate-800 border-gray-500 m-2 p-2" tabindex="0">
             <div class="model_header">
-                <label class="text-gray-700 font-bold text-xl">Accounts Link</label>
+                <label class="font-bold text-xl">Accounts Link</label>
                 <div class="float-right">
-                    <minus v-if="isShowTab(0)" class="border" theme="filled" size="24" fill="#000000" @click="delTab(0)" />
-                    <plus v-else class="border" theme="filled" size="24" fill="#000000" @click="addTab(0)" />
+                    <minus v-if="isShowTab(0)" class="border" theme="two-tone" size="24" :fill="['#fff' ,'#000']" @click="delTab(0)" />
+                    <plus v-else class="border" theme="two-tone" size="24" :fill="['#fff' ,'#000']" @click="addTab(0)" />
                 </div>
             </div>
             <div class="model_content" v-if="isShowTab(0)">
@@ -15,12 +15,12 @@
             </div>
         </div>
         <!-- recordingTable -->
-        <div class="flex flex-wrap rounded bg-white m-2 p-2" tabindex="1">
+        <div class="flex flex-wrap rounded bg-slate-800 border-gray-500 m-2 p-2" tabindex="1">
             <div class="model_header">
-                <label class="text-gray-700 font-bold text-xl">Recording Columns</label>
+                <label class="font-bold text-xl">Recording Columns</label>
                 <div class="float-right">
-                    <minus v-if="isShowTab(1)" class="border" theme="filled" size="24" fill="#000000" @click="delTab(1)" />
-                    <plus v-else class="border" theme="filled" size="24" fill="#000000" @click="addTab(1)" />
+                    <minus v-if="isShowTab(1)" class="border" theme="two-tone" size="24" :fill="['#fff' ,'#000']" @click="delTab(1)" />
+                    <plus v-else class="border" theme="two-tone" size="24" :fill="['#fff' ,'#000']" @click="addTab(1)" />
                 </div>
             </div>
             <div class="model_content" v-if="isShowTab(1)">
@@ -30,24 +30,24 @@
                     <span class="w-1/4 text-center">資料型態</span>
                     <div class="w-1/4 text-center">
                         <div @click="addNewRow()">
-                            <add-item theme="filled" size="24" fill="#0000FF" />
-                            <span class="text-blue-500">New</span>
+                            <add-item theme="two-tone" size="24" :fill="['#fff' ,'#000']" />
+                            <span>New</span>
                         </div>
                     </div>
                 </div>
                 <template v-for="item of recordingTable" :key="item.id">
-                    <label :for="item.colName" class="text-gray-700 flex m-3 h-6">
+                    <label :for="item.colName" class="flex m-3 h-6">
                         <span class="w-1/6 text-center self-center">{{ item.id }}</span>
                         <span v-if="item.id < 8" class="w-1/3 text-center">{{ item.colName }}</span>
                         <input v-else class="input w-1/3 self-center" type="text" v-model="item.colName" @change="saveRecordingTable()">
-                        <select class="w-1/3" v-model="item.colType" @change="saveRecordingTable()">
+                        <select class="w-1/3 mx-1 bg-slate-900" v-model="item.colType" @change="saveRecordingTable()">
                             <option value="text">Text</option>
                             <option value="datetime-local">Date</option>
                             <option value="number">Number</option>
                         </select>
                         <div class="w-1/6 text-center">
                             <div class="items-center" v-if="item.id > 7" @click="delRow(item.id)">
-                                <delete theme="filled" size="22" fill="#FF0000" />
+                                <delete theme="two-tone" size="22" :fill="['#fff' ,'#000']" />
                             </div>
                         </div>
                     </label>

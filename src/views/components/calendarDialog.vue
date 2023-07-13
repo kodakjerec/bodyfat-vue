@@ -7,7 +7,7 @@
             <div class="p-2 bg-white rounded border border-black" :class="{ 'shockWindow': shockWindow }">
                 <div id="model_header" class="relative justify-center">
                     <p class="text-2xl font-bold mt-2 text-center">{{ myTitle }}</p>
-                    <close class="absolute top-0 right-0" theme="filled" size="24" fill="#000000" @click="closeDialog('')" />
+                    <close class="absolute top-0 right-0" theme="two-tone" size="24" :fill="['#fff' ,'#000']" @click="closeDialog('')" />
                 </div>
                 <div id="model_content">
                     <template v-for="item of recordingTable" :key="item.id">
@@ -20,7 +20,7 @@
                 </div>
                 <div id="model_footer">
                     <div class="m-2" @click="deleteItem">
-                        <delete theme="filled" size="24" fill="#FF0000" />
+                        <delete theme="two-tone" size="24" fill="#FF0000" />
                         <span class="text-red-500">Delete</span>
                     </div>
                 </div>

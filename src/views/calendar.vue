@@ -3,7 +3,7 @@
         <calendar-view
             :show-date="showDate"
             :time-format-options="{ hour: 'numeric', minute: '2-digit'}"
-            :class="'theme-default'"
+            :class="'theme-default bg-slate-900'"
             :current-period-label="'icons'"
             :enable-date-selection="true"
             :date-classes="myDateClasses"
@@ -154,5 +154,8 @@ export default {
     .numberM::after {
         content: "\0023\FE0F\20E3";@apply bg-yellow-200 h-4;
     }
-} 
+    .cv-item, .cv-day.past, .cv-day.outsideOfMonth {
+    background-color: rgb(15 23 42 / var(--tw-bg-opacity));
+}
+}
 </style>
