@@ -10,8 +10,7 @@
                 </div>
             </div>
             <div class="model_content" v-if="isShowTab(0)">
-                <button class="btn text-xs" v-if="!googleLogined" @click="showEvents()">Google LogIn</button>
-                <button class="greenBtn" v-else @click="revokeToken()">Google LogOut</button>
+                <GoogleLogin :callback="callback" prompt auto-login popup-type="TOKEN" />
             </div>
         </div>
         <!-- recordingTable -->
@@ -60,9 +59,10 @@
 
 <script lang="ts">
 import { Minus, Plus, AddItem, Delete } from "@icon-park/vue-next";
-import { storeSettings, storeGoogleDrive, type recordModule } from '@/store/index';
+import { storeSettings, type recordModule } from '@/store/index';
 import { createToaster } from '@meforma/vue-toaster';
-import { accessToken, revokeToken } from '@/libs/gDrive';
+import { decodeCredential } from "vue3-google-login";
+import { cloundToLocalStorage, localStorageToCloud } from "@/store/gCloudStore";
 
 export default {
     name: "settings",
@@ -121,13 +121,18 @@ export default {
             storeSettings().setRecordingTable(this.recordingTable);
             createToaster().success(msg, { position: "top", duration: 1000 });
         },
-        // Google Login
-        showEvents() {
-            accessToken();
-        },
-        revokeToken() {
-            revokeToken();
-            createToaster().success(`Log Out!`, { position: "top", duration: 2000 });
+        // Google Logi
+        callback(response) {
+            // decodeCredential will retrive the JWT payload from the credential
+            const userData = decodeCredential(response.credential);
+            const haveToken = storeSettings().getGDriveToken;
+            if (haveToken) {
+                cloundToLocalStorage();
+            } else {
+                storeSettings().setGDriveToken({ sub: userData["sub"], email: userData["email"] });
+                localStorageToCloud();
+            }
+
         },
         resetRecordingTable() {
             this.recordingTable = storeSettings().getRecordingTableDefault;
