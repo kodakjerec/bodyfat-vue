@@ -17,23 +17,25 @@ export async function localStorageToCloud() {
 
   // 開始上傳
   let isOverwrite = true;
-
-  // 下載遠端檔案
   const userInfo: any = storeSettings().getGDriveToken;
-  const cloudData: any = await load(userInfo["sub"]);
-  if (cloudData && !storeSettings().getIsSync) {
-    // TODO 檢查檔案日期
-    const lastModifiedTime: any = cloudData.data.modifiedTime;
 
-    // TODO 詢問使用者是否覆蓋
-    if (lastModifiedTime.modifiedTime) {
-      const result = await Swal.fire({
-        title: "覆蓋雲端紀錄？雲端更新日期：" + lastModifiedTime.modifiedTime,
-        showCancelButton: true,
-        confirmButtonText: "是",
-      });
-      if (!result.isConfirmed) {
-        isOverwrite = false;
+  if (!storeSettings().getIsSync) {
+    // 下載遠端檔案
+    const cloudData: any = await load(userInfo["sub"]);
+    if (cloudData) {
+      // TODO 檢查檔案日期
+      const lastModifiedTime: any = cloudData.data.modifiedTime;
+
+      // TODO 詢問使用者是否覆蓋
+      if (lastModifiedTime.modifiedTime) {
+        const result = await Swal.fire({
+          title: "覆蓋雲端紀錄？雲端更新日期：" + lastModifiedTime.modifiedTime,
+          showCancelButton: true,
+          confirmButtonText: "是",
+        });
+        if (!result.isConfirmed) {
+          isOverwrite = false;
+        }
       }
     }
   }
@@ -42,8 +44,8 @@ export async function localStorageToCloud() {
   if (isOverwrite) {
     storeSettings().setIsSync(true);
     const userId = userInfo["sub"];
-    const email = userInfo["email"];
-    const patchResult = await save(userId, email, saveData);
+    const eMail = userInfo["email"];
+    const patchResult = await save(userId, eMail, saveData);
 
     if (patchResult) {
       return patchResult;
@@ -82,11 +84,13 @@ export async function cloundToLocalStorage() {
 
     // 下載
     if (isOverwrite) {
-      const fromData = cloudData.data.data;
+      const fromData = JSON.parse(cloudData.data.data);
       storeSettings().setIsSync(true);
       if (fromData) {
         Object.entries(fromData).map(([key, value]) => {
-          storageSet(key, value);
+          if (mapAttr.includes(key)) {
+            storageSet(key, value);
+          }
         });
       }
     }

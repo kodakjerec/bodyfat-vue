@@ -1,5 +1,6 @@
 import { createPinia, defineStore } from "pinia";
-import cryptoJS from "crypto-js";
+import AES from "crypto-js/aes";
+import encUtf8 from "crypto-js/enc-utf8";
 import { localStorageToCloud } from "./gCloudStore";
 
 // unify storage method.
@@ -25,7 +26,7 @@ export const storeSettings = defineStore({
     lastPath: "", // last visit page
     bodyFatDatalist: [],
 
-    googleOAuth2token: "", // google OAuth2 token
+    googleOAuth2token: "" as any, // google OAuth2 token
     googleDriveFileName: "BodyFatRecorder.txt",
     isSync: false, // 是否有問過同步
 
@@ -77,17 +78,21 @@ export const storeSettings = defineStore({
         const tempData = storageGet("bodyFatDatalist");
         if (tempData) {
           state.bodyFatDatalist = JSON.parse(tempData);
+        } else {
+          storageSet("bodyFatDatalist", []);
+          state.bodyFatDatalist = [];
         }
       }
       return state.bodyFatDatalist;
     },
     getGDriveToken(state) {
       if (!state.googleOAuth2token) {
-        let aesToken = storageGet("gToken") ?? {};
-        state.googleOAuth2token = cryptoJS.AES.decrypt(aesToken, state.secretKey).toString(cryptoJS.enc.Utf8);
+        let aesToken = storageGet("gToken");
+        if (!aesToken) return "";
+        state.googleOAuth2token = JSON.parse(AES.decrypt(aesToken, state.secretKey).toString(encUtf8));
       }
 
-      return JSON.parse(state.googleOAuth2token);
+      return state.googleOAuth2token;
     },
     getIsSync(state) {
       const tempData = storageGet("isSync");
@@ -123,7 +128,7 @@ export const storeSettings = defineStore({
     },
     setGDriveToken(token: object) {
       this.googleOAuth2token = token;
-      const aesAPIKey = cryptoJS.AES.encrypt(JSON.stringify(token), this.secretKey).toString();
+      const aesAPIKey = AES.encrypt(JSON.stringify(token), this.secretKey).toString();
       storageSet("gToken", aesAPIKey, false);
     },
     setEChartSetting(fromSetting: object) {

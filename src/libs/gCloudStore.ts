@@ -34,15 +34,15 @@ export async function load(sub: string) {
   }
 }
 
-export async function save(sub: string, email: string, fileContent: string) {
+export async function save(sub: string, eMail: string, fileContent: string) {
   try {
+    let formData = new FormData();
+    formData.append("id", sub);
+    formData.append("eMail", eMail);
+    formData.append("data", fileContent);
     const response = await fetch("https://asia-east1-bodyfatrecorder.cloudfunctions.net/save", {
       method: "POST",
-      body: JSON.stringify({
-        id: sub,
-        email: email,
-        data: fileContent,
-      }),
+      body: formData,
     });
     const { body, status, headers } = response;
     if (status === 200) {
