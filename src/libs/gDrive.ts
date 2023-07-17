@@ -16,7 +16,7 @@ export async function accessToken() {
         scope: "https://www.googleapis.com/auth/drive.file profile",
         prompt: "consent",
         callback: async (response) => {
-          storeSettings().setGDriveToken(response.access_token);
+          storeSettings().setGDriveToken(response.access_token as any);
           createToaster().success("Login success. Checking Cloud Data.", { position: "top" });
 
           // getUserInfo();
@@ -275,7 +275,7 @@ export async function gDriveLoad(fileId: string) {
  */
 function clearToken(status) {
   // clean token
-  storeSettings().setGDriveToken("");
+  storeSettings().setGDriveToken({});
   storeSettings().setIsSync(false);
 
   if (status === 401) {
