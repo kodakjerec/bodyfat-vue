@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-100 flex flex-col grow h-screen overflow-x-hidden">
+  <div class="bg-orange-200 flex flex-col grow h-screen overflow-x-hidden">
     <div id="app_header"></div>
     <!-- nowLoading -->
     <div v-if="nowLoading" class="absolute w-full h-screen bg-slate-100 opacity-90 z-10">
@@ -14,17 +14,17 @@
       <router-view v-if="nowPath === 'settings'" name="settings" />
     </div>
     <div id="app_footer" class="sticky bottom-0 w-full flex">
-      <div class="btn w-1/4 flex" @click="gotoPath('home')">
-        <home theme="filled" size="24" fill="#000000"/><span>首頁</span>
+      <div class="appFooterBtn w-1/4 flex" @click="gotoPath('home')">
+        <home theme="two-tone" size="24" :fill="['#fff' ,'#6D28D9']"/><span>首頁</span>
       </div>
-      <div class="btn w-1/4 flex" @click="gotoPath('calendar')">
-        <calendarDot theme="filled" size="24" fill="#000000"/><span>日曆</span>
+      <div class="appFooterBtn w-1/4 flex" @click="gotoPath('calendar')">
+        <calendarDot theme="two-tone" size="24" :fill="['#fff' ,'#6D28D9']"/><span>日曆</span>
       </div>
-      <div class="btn w-1/4 flex" @click="gotoPath('chart')">
-        <chartHistogram theme="filled" size="24" fill="#000000"/><span>圖表</span>
+      <div class="appFooterBtn w-1/4 flex" @click="gotoPath('chart')">
+        <chartHistogram theme="two-tone" size="24" :fill="['#fff' ,'#6D28D9']"/><span>圖表</span>
       </div>
-      <div class="btn w-1/4 flex" @click="gotoPath('settings')">
-        <setting theme="filled" size="24" fill="#000000"/><span>設定</span></div>
+      <div class="appFooterBtn w-1/4 flex" @click="gotoPath('settings')">
+        <setting theme="two-tone" size="24" :fill="['#fff' ,'#6D28D9']"/><span>設定</span></div>
     </div>
   </div>
 </template>

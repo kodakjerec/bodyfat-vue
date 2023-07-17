@@ -1,6 +1,6 @@
 <template>
     <!-- Accounts -->
-    <div class="flex-wrap rounded bg-white m-2 p-2" tabindex="0">
+    <div class="flex-wrap rounded bg-amber-500 m-2 p-2" tabindex="0">
         <div class="model_header">
             <label class="text-gray-700 font-bold text-xl">Accounts Link</label>
             <div class="float-right">
@@ -9,7 +9,7 @@
             </div>
         </div>
         <div class="model_content" v-if="isShowTab(0)">
-            <GoogleLogin :callback="callback" prompt auto-login />
+            <GoogleLogin :callback="callback" prompt auto-login small />
         </div>
     </div>
 </template>
@@ -21,7 +21,7 @@ import { cloundToLocalStorage, localStorageToCloud } from "@/store/gCloudStore";
 import { storeSettings } from '@/store';
 
 export default {
-    name: "settings",
+    name: "accounts",
     components: {
         Minus, Plus
     },

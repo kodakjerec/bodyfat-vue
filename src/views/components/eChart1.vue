@@ -1,5 +1,5 @@
 <template>
-    <div class="relative h-5/6 overflow-hidden" ref="eChart-container">
+    <div class="" ref="eChart-container">
     </div>
 </template>
 

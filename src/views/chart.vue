@@ -1,9 +1,9 @@
 <template>
     <!-- search -->
-    <div id="search_content">
+    <div id="search_content" class="m-2">
         <div>
             <label class="text-gray-700 flex items-center">
-                <span class="label-xl w-1/6">日期</span>
+                <span class="label-xl text-base w-1/6">日期區間</span>
                 <input type="date" class="input text-base w-1/3" v-model="startDate" :max="today">
                 <span>~</span>
                 <input type="date" class="input text-base w-1/3" v-model="endDate" :max="today">
@@ -11,7 +11,7 @@
         </div>
     </div>
     <!-- diagram -->
-    <eChart1 :fromData="filteredList"></eChart1>
+    <eChart1 class="h-5/6" :fromData="filteredList"></eChart1>
 </template>
 
 <script lang="ts">

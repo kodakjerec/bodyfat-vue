@@ -1,10 +1,10 @@
 
 <template>
     <div>
-        <div class="fixed left-0 top-0 w-full h-full bg-slate-100 opacity-90" @click="clickWhiteSpace">
+        <div class="fixed left-0 top-0 w-full h-full bg-amber-100 opacity-90" @click="clickWhiteSpace">
         </div>
         <div class="fixed top-10 w-full text-center px-6">
-            <div class="p-2 bg-white rounded border border-black" :class="{ 'shockWindow': shockWindow }">
+            <div class="p-2 rounded border border-black bg-orange-200" :class="{ 'shockWindow': shockWindow }">
                 <div id="model_header" class="relative justify-center">
                     <p class="text-2xl font-bold mt-2 text-center">{{ myTitle }}</p>
                     <close class="absolute top-0 right-0" theme="filled" size="24" fill="#000000" @click="closeDialog('')" />
@@ -12,6 +12,9 @@
                 <div id="model_content">
                     <template v-for="item of recordingTable" :key="item.id">
                         <label :for="item.colName" class="text-gray-700 flex mt-2">
+                            <span class="">
+                                <icon-number :fromId="item.id"></icon-number>
+                            </span>
                             <span class="label-xl w-1/3">{{ item.colName }}</span>
                             <input v-if="item.colType === 'datetime-local'" :id="item.colName" class="input text-lg w-1/2" v-model="recorder[item.colName]" @focus="inputFocus($event)" disabled>
                             <input v-else :type="item.colType" :id="item.colName" class="input w-1/2" v-model="recorder[item.colName]" @focus="inputFocus($event)" disabled>
@@ -32,11 +35,13 @@
 <script lang="ts">
 import { Close, Delete } from "@icon-park/vue-next";
 import { storeSettings, type recordModule } from '@/store'
+import iconNumber from "./iconNumber.vue";
 
 export default {
     name: "calendarDialog",
     components: {
-        Close, Delete
+        Close, Delete,
+        iconNumber
     },
     props: {
         title: {
