@@ -1,18 +1,5 @@
 <template>
     <div class="h-full">
-        <!-- Accounts -->
-        <div class="flex flex-wrap rounded bg-white m-2 p-2" tabindex="0">
-            <div class="model_header">
-                <label class="text-gray-700 font-bold text-xl">Accounts Link</label>
-                <div class="float-right">
-                    <minus v-if="isShowTab(0)" class="border" theme="filled" size="24" fill="#000000" @click="delTab(0)" />
-                    <plus v-else class="border" theme="filled" size="24" fill="#000000" @click="addTab(0)" />
-                </div>
-            </div>
-            <div class="model_content" v-if="isShowTab(0)">
-                <GoogleLogin :callback="callback" prompt auto-login popup-type="TOKEN" />
-            </div>
-        </div>
         <!-- recordingTable -->
         <div class="flex flex-wrap rounded bg-white m-2 p-2" tabindex="1">
             <div class="model_header">
@@ -61,8 +48,6 @@
 import { Minus, Plus, AddItem, Delete } from "@icon-park/vue-next";
 import { storeSettings, type recordModule } from '@/store/index';
 import { createToaster } from '@meforma/vue-toaster';
-import { decodeCredential } from "vue3-google-login";
-import { cloundToLocalStorage, localStorageToCloud } from "@/store/gCloudStore";
 
 export default {
     name: "settings",
@@ -73,14 +58,6 @@ export default {
         return {
             recordingTable: [] as Array<recordModule>,
             showTabs: [0, 1] as Array<number>
-        }
-    },
-    computed: {
-        googleLogined() {
-            if (storeSettings().getGDriveToken) {
-                return true;
-            }
-            return false;
         }
     },
     mounted() {
@@ -120,19 +97,6 @@ export default {
         saveRecordingTable(msg: string = `儲存成功`) {
             storeSettings().setRecordingTable(this.recordingTable);
             createToaster().success(msg, { position: "top", duration: 1000 });
-        },
-        // Google Logi
-        callback(response) {
-            // decodeCredential will retrive the JWT payload from the credential
-            const userData = decodeCredential(response.credential);
-            const haveToken = storeSettings().getGDriveToken;
-            if (haveToken) {
-                cloundToLocalStorage();
-            } else {
-                storeSettings().setGDriveToken({ sub: userData["sub"], email: userData["email"] });
-                localStorageToCloud();
-            }
-
         },
         resetRecordingTable() {
             this.recordingTable = storeSettings().getRecordingTableDefault;

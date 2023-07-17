@@ -27,22 +27,22 @@ export async function localStorageToCloud() {
       const lastModifiedTime: any = cloudData.data.modifiedTime;
 
       // TODO 詢問使用者是否覆蓋
-      if (lastModifiedTime.modifiedTime) {
+      if (lastModifiedTime) {
         const result = await Swal.fire({
-          title: "覆蓋雲端紀錄？雲端更新日期：" + lastModifiedTime.modifiedTime,
+          title: "覆蓋雲端紀錄？雲端更新日期：" + new Date(lastModifiedTime).toISOString().replace("T","").replace("Z",""),
           showCancelButton: true,
           confirmButtonText: "是",
         });
         if (!result.isConfirmed) {
           isOverwrite = false;
         }
+        storeSettings().setIsSync(true);
       }
     }
   }
 
   // 上傳覆蓋
   if (isOverwrite) {
-    storeSettings().setIsSync(true);
     const userId = userInfo["sub"];
     const eMail = userInfo["email"];
     const patchResult = await save(userId, eMail, saveData);
@@ -70,22 +70,22 @@ export async function cloundToLocalStorage() {
       const lastModifiedTime: any = cloudData.data.modifiedTime;
 
       // TODO 詢問使用者是否覆蓋
-      if (lastModifiedTime.modifiedTime) {
+      if (lastModifiedTime) {
         const result = await Swal.fire({
-          title: "覆蓋本地紀錄？雲端更新日期：" + lastModifiedTime.modifiedTime,
+          title: "覆蓋本地紀錄？雲端更新日期：" + new Date(lastModifiedTime).toISOString().replace("T","").replace("Z",""),
           showCancelButton: true,
           confirmButtonText: "是",
         });
         if (!result.isConfirmed) {
           isOverwrite = false;
         }
+        storeSettings().setIsSync(true);
       }
     }
 
     // 下載
     if (isOverwrite) {
       const fromData = JSON.parse(cloudData.data.data);
-      storeSettings().setIsSync(true);
       if (fromData) {
         Object.entries(fromData).map(([key, value]) => {
           if (mapAttr.includes(key)) {

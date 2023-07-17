@@ -7,12 +7,13 @@
     </div>
     <!-- Content -->
     <div id="app_content" class="calHeight w-full overflow-y-scroll">
+      <accounts v-show="nowPath === 'settings'"></accounts>
       <router-view v-if="nowPath === 'home'" name="home" />
       <router-view v-if="nowPath === 'calendar'" name="calendar" />
       <router-view v-if="nowPath === 'chart'" name="chart" />
       <router-view v-if="nowPath === 'settings'" name="settings" />
     </div>
-    <div id="app_footer" class="relative bottom-0 w-full flex">
+    <div id="app_footer" class="sticky bottom-0 w-full flex">
       <div class="btn w-1/4 flex" @click="gotoPath('home')">
         <home theme="filled" size="24" fill="#000000"/><span>首頁</span>
       </div>
@@ -30,12 +31,13 @@
 <script lang="ts">
 import { Home, CalendarDot, ChartHistogram, Setting } from "@icon-park/vue-next";
 import { storeSettings } from '@/store/index';
-import { storeToRefs } from 'pinia';
+import accounts from "./views/accounts.vue";
 
 export default {
   name: 'App',
   components: {
-    Home, CalendarDot, ChartHistogram, Setting
+    Home, CalendarDot, ChartHistogram, Setting,
+    accounts
   },
   data() {
     return {
