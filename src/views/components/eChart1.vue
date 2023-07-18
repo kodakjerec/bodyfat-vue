@@ -75,31 +75,33 @@ export default {
 
             const recordingTable: Array<any> = storeSettings().getRecordingTable;
             let originData = Array.from(this.fromData);
-            // 曲線
+            // y軸種類, 此處放置欄位名稱
             let contentList = {};
             recordingTable.map(row => {
                 contentList[row.colName] = [];
             })
 
             originData = originData.sort((a: any, b: any) => {
-                const date1 = new Date(a['日期']);
-                const date2 = new Date(b['日期']);
+                const date1 = new Date(a["0"]);
+                const date2 = new Date(b["0"]);
                 const dateDiff = date2.getTime() - date1.getTime();
                 if (dateDiff > 0) return -1;
                 else if (dateDiff < 0) return 1;
                 else return 0;
             });
 
+            // 分堆: 由 id 找到 欄位名稱, 放入對應的y軸
             originData.map((row: any) => {
                 Object.entries(row).map(([key, value]) => {
-                    if (contentList[key]) {
-                        contentList[key].push(value);
+                    const findColName = recordingTable.find(row=>row.id===parseInt(key))?.colName;
+                    if (findColName && contentList[findColName]) {
+                        contentList[findColName].push(value);
                     }
                 });
             });
 
             Object.entries(contentList).map(([key, value]) => {
-                if (key === '日期') {
+                if (key === "0") {
                     this.option.xAxis.data = contentList[key];
                 } else {
                     this.option.series.push({

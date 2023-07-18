@@ -1,7 +1,7 @@
 <template>
     <div class="">
         <div class="flex justify-center items-center">
-            <p class="text-2xl font-bold text-center mt-2">體脂紀錄</p>
+            <p class="text-2xl font-bold text-center mt-2">{{ $t('_bodyFatRecorder') }}</p>
             <weight theme="filled" size="24" fill="#000000" @click="randomValue" />
         </div>
         <template v-for="item of recordingTable" :key="item.id">
@@ -10,13 +10,13 @@
                     <icon-number :fromId="item.id"></icon-number>
                 </span>
                 <span class="label-xl w-1/3">{{ item.colName }}</span>
-                <input v-if="item.colType === 'datetime-local'" :type="item.colType" :id="item.colName" class="input py-2 text-lg w-1/2" v-model="recorder[item.colName]" @focus="inputFocus($event)" :disabled="saving">
-                <input v-else :type="item.colType" :id="item.colName" class="input py-2 w-1/2" v-model="recorder[item.colName]" @focus="inputFocus($event)" :disabled="saving">
+                <input v-if="item.colType === 'datetime-local'" :type="item.colType" :id="item.colName" class="input py-2 text-lg w-1/2" v-model="recorder[item.id]" @focus="inputFocus($event)" :disabled="saving">
+                <input v-else :type="item.colType" :id="item.colName" class="input py-2 w-1/2" v-model="recorder[item.id]" @focus="inputFocus($event)" :disabled="saving">
             </label>
         </template>
         <div class="flex justify-center mt-2">
-            <button class="btn flex items-center px-2" @click="save" :disabled="saving">
-                <save theme="filled" size="24" fill="#000000" /><span>SAVE</span>
+            <button class="inAppBtn" @click="save" :disabled="saving">
+                <save theme="filled" size="24" fill="#000000" /><span>Save</span>
             </button>
         </div>
     </div>
@@ -50,11 +50,11 @@ export default {
             this.recordingTable.map((item) => {
                 switch (item.colType) {
                     case "text":
-                        this.recorder[item.colName] = ""; break;
+                        this.recorder[item.id] = ""; break;
                     case "number":
-                        this.recorder[item.colName] = 0; break;
+                        this.recorder[item.id] = 0; break;
                     case "datetime-local":
-                        this.recorder[item.colName] = dayjs().format("YYYY-MM-DDTHH:mm"); break;
+                        this.recorder[item.id] = dayjs().format("YYYY-MM-DDTHH:mm"); break;
                 }
             })
         },
@@ -85,19 +85,19 @@ export default {
             this.recordingTable.map((item) => {
                 switch (item.colType) {
                     case "text":
-                        this.recorder[item.colName] = result; break;
+                        this.recorder[item.id] = result; break;
                     case "number":
-                        this.recorder[item.colName] = Math.round(Math.random() * 200); break;
+                        this.recorder[item.id] = Math.round(Math.random() * 200); break;
                     case "datetime-local":
-                        this.recorder[item.colName] = dayjs(resultDate).format("YYYY-MM-DDTHH:mm"); break;
+                        this.recorder[item.id] = dayjs(resultDate).format("YYYY-MM-DDTHH:mm"); break;
                 }
             })
         },
         save() {
             this.saving = true;
             let errorMsg = "";
-            if (!this.recorder["日期"]) {
-                errorMsg = "日期為必要輸入欄位";
+            if (!this.recorder["0"]) {
+                errorMsg = this.$t('_col_date_errorMsg1');
             }
 
             if (errorMsg.length > 0) {
@@ -105,9 +105,9 @@ export default {
                 return;
             }
 
-            storeSettings().nowLoading = "Loading";
+            storeSettings().nowLoading = "Saving. Please waiting...";
             storeSettings().insertBodyFatDatalist(this.recorder);
-            createToaster().success(`儲存成功`, {
+            createToaster().success(this.$t('_save_success'), {
                 position: "top", duration: 1000, onClose: () => {
                     this.saving = false;
                     this.reset();

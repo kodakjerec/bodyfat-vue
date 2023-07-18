@@ -1,6 +1,6 @@
 <template>
     <!-- Accounts -->
-    <div class="flex flex-wrap rounded bg-amber-500 m-2 p-2" tabindex="0">
+    <div class="flex flex-wrap rounded appSecondColor m-2" tabindex="0">
         <div class="model_header">
             <label class="text-gray-700 font-bold text-xl">Accounts</label>
             <div class="float-right">

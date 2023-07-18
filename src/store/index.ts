@@ -2,6 +2,9 @@ import { createPinia, defineStore } from "pinia";
 import AES from "crypto-js/aes";
 import encUtf8 from "crypto-js/enc-utf8";
 import { localStorageToCloud } from "./gCloudStore";
+import i18n from '@/libs/i18n';
+
+const { t } = i18n.global
 
 // unify storage method.
 export function storageSet(key, value, cloundSave: boolean = false): void {
@@ -33,22 +36,23 @@ export const storeSettings = defineStore({
     nowLoading: "", // local loading mask
 
     isSync: false, // 是否有問過同步
-    isIntro: true // 第一次登入
+    isIntro: true, // 第一次登入
+    lang: 'zh-TW' // 語系
   }),
   getters: {
     getRecordingTableDefault() {
       return [
-        { id: 0, colName: "日期", colType: "datetime-local" },
-        { id: 1, colName: "體重", colType: "number" },
-        { id: 2, colName: "BMI", colType: "number" },
-        { id: 3, colName: "體脂肪率", colType: "number" },
-        { id: 4, colName: "肌肉量", colType: "number" },
-        { id: 5, colName: "內臟脂肪", colType: "number" },
-        { id: 6, colName: "體內年齡", colType: "number" },
-        { id: 7, colName: "基礎代謝", colType: "number" },
-        { id: 8, colName: "舒張壓", colType: "number" },
-        { id: 9, colName: "收縮壓", colType: "number" },
-        { id: 10, colName: "血糖", colType: "number" },
+        { id: 0, colName: t('_col_date'), colType: "datetime-local" },
+        { id: 1, colName: t('_col_weight'), colType: "number" },
+        { id: 2, colName: t('_col_bmi'), colType: "number" },
+        { id: 3, colName: t('_col_bodyFatPer'), colType: "number" },
+        { id: 4, colName: t('_col_muscleMass'), colType: "number" },
+        { id: 5, colName: t('_col_visceralFat'), colType: "number" },
+        { id: 6, colName: t('_col_bodyAge'), colType: "number" },
+        { id: 7, colName: t('_col_basalMetabolicRate'), colType: "number" },
+        { id: 8, colName: t('_col_diastolicBloodPressure'), colType: "number" },
+        { id: 9, colName: t('_col_systolicBloodPressure'), colType: "number" },
+        { id: 10, colName: t('_col_bloodSugar'), colType: "number" },
       ];
     },
     getRecordingTable(state) {
@@ -107,6 +111,14 @@ export const storeSettings = defineStore({
       }
       return state.isIntro;
     },
+    getLang(state) {
+      const tempData = storageGet("lang");
+      if (tempData) {
+        state.lang = tempData;
+      }
+
+      return state.lang
+    }
   },
   actions: {
     setLastPath(path: string) {
@@ -116,6 +128,10 @@ export const storeSettings = defineStore({
     setRecordingTable(fromTable: Array<recordModule>) {
       this.recordingTable = fromTable;
       storageSet("recordingTable", JSON.stringify(this.recordingTable));
+    },
+    setBodyFatDatalist(records: Array<any>) {
+      this.bodyFatDatalist = records;
+      storageSet("bodyFatDatalist", JSON.stringify(this.bodyFatDatalist));
     },
     insertBodyFatDatalist(record: object) {
       let newRecord = {};
@@ -145,7 +161,11 @@ export const storeSettings = defineStore({
     },
     setIsIntro(status: boolean) {
       this.isIntro = status;
-      storageSet("isIntro", JSON.stringify(this.isSync));
+      storageSet("isIntro", JSON.stringify(this.isIntro));
+    },
+    setLang(lang:string) {
+      this.lang = lang;
+      storageSet("lang", lang);
     }
   },
 });

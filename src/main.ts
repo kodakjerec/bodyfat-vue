@@ -18,6 +18,8 @@ import "sweetalert2/dist/sweetalert2.min.css";
 import introJS from "intro.js";
 import "intro.js/introjs.css";
 app.provide('intro', introJS());
+// i18n
+import i18n from './libs/i18n';
 
 import 'default-passive-events';
 
@@ -28,4 +30,5 @@ app
     clientId: gDriveId,
   })
   .use(VueSweetalert2)
+  .use(i18n)
   .mount("#app");

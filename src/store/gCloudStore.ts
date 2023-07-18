@@ -2,24 +2,21 @@ import { storeSettings, storageSet } from ".";
 import Swal from "sweetalert2";
 import { load, save } from "@/libs/gCloudStore";
 
-// 要同步的資料
-const mapAttr = ["bodyFatDatalist"];
-
+/**
+ * 上傳本地資料到雲端
+ * @returns 
+ */
 export async function localStorageToCloud() {
   // 準備資料
-  const filterData = JSON.parse(JSON.stringify(localStorage));
-  Object.keys(filterData).map((key) => {
-    if (!mapAttr.includes(key)) {
-      delete filterData[key];
-    }
-  });
+  let filterData = {};
+  filterData['bodyFatDatalist'] = storeSettings().getBodyFatDataList;
+  filterData['recordingTable'] = storeSettings().getRecordingTable;
   const saveData = JSON.stringify(filterData);
 
   // 開始上傳
   let isOverwrite = true;
   const userInfo: any = storeSettings().getGDriveToken;
-
-  if (!storeSettings().getIsSync) {
+  if (userInfo && !storeSettings().getIsSync) {
     // 下載遠端檔案
     const cloudData: any = await load(userInfo["sub"]);
     if (cloudData) {
@@ -55,16 +52,15 @@ export async function localStorageToCloud() {
   return "";
 }
 /**
- * restore localstorage to cloud-data
+ * 下載雲端資料覆蓋本地
  * @param data json string
  */
 export async function cloundToLocalStorage() {
-  const token = storeSettings().getGDriveToken;
-  if (token) {
-    const userInfo: any = storeSettings().getGDriveToken;
-    const cloudData: any = await load(userInfo["sub"]);
-
+  const userInfo: any = storeSettings().getGDriveToken;
+  if (userInfo) {
     let isOverwrite = true;
+    
+    const cloudData: any = await load(userInfo["sub"]);
     if (cloudData && !storeSettings().getIsSync) {
       // TODO 檢查檔案日期
       const lastModifiedTime: any = cloudData.data.modifiedTime;
@@ -87,11 +83,8 @@ export async function cloundToLocalStorage() {
     if (isOverwrite) {
       const fromData = JSON.parse(cloudData.data.data);
       if (fromData) {
-        Object.entries(fromData).map(([key, value]) => {
-          if (mapAttr.includes(key)) {
-            storageSet(key, value);
-          }
-        });
+        storeSettings().setBodyFatDatalist(fromData['bodyFatDatalist']);
+        storeSettings().setRecordingTable(fromData['recordingTable']);
       }
     }
   }

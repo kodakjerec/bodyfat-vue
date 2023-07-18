@@ -1,17 +1,30 @@
 <template>
     <div class="">
+        <!-- language -->
+        <div class="flex flex-wrap rounded bg-white m-2" tabindex="8">
+            <div class="model_header">
+                <label class="text-gray-700 font-bold text-xl">Language</label>
+                <div class="float-right">
+                    <minus v-if="isShowTab(8)" theme="filled" size="24" fill="#000000" @click="delTab(8)" />
+                    <plus v-else theme="filled" size="24" fill="#000000" @click="addTab(8)" />
+                </div>
+                <div class="model_content" v-if="isShowTab(8)">
+                    <selectLanguage></selectLanguage>
+                </div>
+            </div>
+        </div>
         <!-- recordingTable -->
-        <div class="flex flex-wrap rounded bg-white m-2 p-2" tabindex="1">
+        <div class="flex flex-wrap rounded bg-white m-2" tabindex="9">
             <div class="model_header">
                 <label class="text-gray-700 font-bold text-xl">Recording Columns</label>
                 <div class="float-right">
-                    <minus v-if="isShowTab(1)" theme="filled" size="24" fill="#000000" @click="delTab(1)" />
-                    <plus v-else theme="filled" size="24" fill="#000000" @click="addTab(1)" />
+                    <minus v-if="isShowTab(9)" theme="filled" size="24" fill="#000000" @click="delTab(9)" />
+                    <plus v-else theme="filled" size="24" fill="#000000" @click="addTab(9)" />
                 </div>
             </div>
-            <div class="model_content" v-if="isShowTab(1)">
+            <div class="model_content" v-if="isShowTab(9)">
                 <div class="flex">
-                    <span class="w-1/4 text-center">序號</span>
+                    <span class="w-1/4 text-center"></span>
                     <span class="w-1/4 text-center">顯示名稱</span>
                     <span class="w-1/4 text-center">資料型態</span>
                     <div class="w-1/4 text-center">
@@ -40,8 +53,10 @@
                         </div>
                     </label>
                 </template>
-                <div class="flex justify-center">
-                    <div class="btn w-12" @click="resetRecordingTable">預設</div>
+                <div class="flex justify-center mt-2">
+                    <button class="inAppBtn" @click="resetRecordingTable">
+                        <refresh theme="filled" size="24" fill="#000000" /><span>Reset</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -49,21 +64,22 @@
 </template>
 
 <script lang="ts">
-import { Minus, Plus, AddItem, Delete } from "@icon-park/vue-next";
+import { Minus, Plus, AddItem, Delete, Refresh } from "@icon-park/vue-next";
 import { storeSettings, type recordModule } from '@/store/index';
 import { createToaster } from '@meforma/vue-toaster';
 import iconNumber from "./components/iconNumber.vue";
+import selectLanguage from './components/selectLanguage.vue';
 
 export default {
     name: "settings",
     components: {
-        Minus, Plus, AddItem, Delete,
-        iconNumber
+        Minus, Plus, AddItem, Delete, Refresh,
+        iconNumber, selectLanguage
     },
     data() {
         return {
             recordingTable: [] as Array<recordModule>,
-            showTabs: [0, 1] as Array<number>
+            showTabs: [9] as Array<number>
         }
     },
     mounted() {

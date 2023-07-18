@@ -1,5 +1,5 @@
 <template>
-    <div class="h-5/6 m-2">
+    <div class="h-full mt-2">
         <calendar-view
             :show-date="showDate"
             :time-format-options="{ hour: 'numeric', minute: '2-digit'}"
@@ -16,7 +16,7 @@
                 </calendar-view-header>
             </template>
         </calendar-view>
-        <calendar-dialog v-if="showDialog" :fromData="dialogItem" @close="closeDialog" @delete="deleteItemDialog"/>
+        <calendar-dialog v-if="showDialog" :title="this.$t('_bodyFatRecorder')" :fromData="dialogItem" @close="closeDialog" @delete="deleteItemDialog"/>
     </div>
 </template>
 
@@ -79,14 +79,14 @@ export default {
             this.oldDataList.map((row, index)=>{
                 // 日曆元件
                 this.items.push({
-                    id: row['id'],
-                    startDate: new Date(row["日期"]),
-                    title: row["日期"].slice(-5),
+                    id: row["id"],
+                    startDate: new Date(row["0"]),
+                    title: row["0"].slice(-5),
                     class: ["purple"]
                 })
 
                 // 統計一天幾次
-                const dateString = dayjs(row["日期"]).format("YYYY-MM-DD");
+                const dateString = dayjs(row["0"]).format("YYYY-MM-DD");
                 let findObject = this.dateCountList.find(row=> row.startDate === dateString);
                 if (findObject) {
                     findObject.counts = parseInt(findObject.counts)+1;
@@ -113,7 +113,7 @@ export default {
                 this.showDialog = true;
                 this.dialogItem = item;
             } else {
-                createToaster().error(`紀錄不存在?發生了未知錯誤`, { position: "top", duration: 2000 });
+                createToaster().error(this.$t('_calendar_errorMsg1'), { position: "top", duration: 2000 });
             }
         },
         closeDialog(event) {

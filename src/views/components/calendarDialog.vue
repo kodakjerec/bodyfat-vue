@@ -4,7 +4,7 @@
         <div class="fixed left-0 top-0 w-full h-full bg-amber-100 opacity-90" @click="clickWhiteSpace">
         </div>
         <div class="fixed top-10 w-full text-center px-6">
-            <div class="p-2 rounded border border-black bg-orange-200" :class="{ 'shockWindow': shockWindow }">
+            <div class="p-2 rounded border border-black appBgColor" :class="{ 'shockWindow': shockWindow }">
                 <div id="model_header" class="relative justify-center">
                     <p class="text-2xl font-bold mt-2 text-center">{{ myTitle }}</p>
                     <close class="absolute top-0 right-0" theme="filled" size="24" fill="#000000" @click="closeDialog('')" />
@@ -16,15 +16,16 @@
                                 <icon-number :fromId="item.id"></icon-number>
                             </span>
                             <span class="label-xl w-1/3">{{ item.colName }}</span>
-                            <input v-if="item.colType === 'datetime-local'" :id="item.colName" class="input text-lg w-1/2" v-model="recorder[item.colName]" @focus="inputFocus($event)" disabled>
-                            <input v-else :type="item.colType" :id="item.colName" class="input w-1/2" v-model="recorder[item.colName]" @focus="inputFocus($event)" disabled>
+                            <input v-if="item.colType === 'datetime-local'" :id="item.colName" class="input text-lg w-1/2" v-model="recorder[item.id]" @focus="inputFocus($event)" disabled>
+                            <input v-else :type="item.colType" :id="item.colName" class="input w-1/2" v-model="recorder[item.id]" @focus="inputFocus($event)" disabled>
                         </label>
                     </template>
                 </div>
                 <div id="model_footer">
-                    <div class="m-2" @click="deleteItem">
-                        <delete theme="filled" size="24" fill="#FF0000" />
-                        <span class="text-red-500">Delete</span>
+                    <div class="flex justify-center mt-2">
+                        <button class="inAppBtn" @click="deleteItem">
+                            <delete theme="filled" size="24" fill="#ff0000" /><span class="text-red-500">Delete</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -46,7 +47,7 @@ export default {
     props: {
         title: {
             type: String,
-            default: "體脂紀錄"
+            default: "Dialog"
         },
         fromData: {
             type: Object,
@@ -77,7 +78,7 @@ export default {
 
             setTimeout(() => {
                 this.shockWindow = false;
-                this.myTitle = "一秒後關閉視窗";
+                this.myTitle = this.$t('_calendar_shockWindow');
             }, 50);
 
             setTimeout(() => {
@@ -87,7 +88,7 @@ export default {
         // 刪除資料
         async deleteItem() {
             const result = await this.$swal({
-                title: '刪除此筆紀錄？',
+                title: this.$t('_calendar_deleteRecord'),
                 showCancelButton: true,
                 confirmButtonText: 'Ok'
             });
