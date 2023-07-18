@@ -1,12 +1,12 @@
 <template>
-    <div class="h-full">
+    <div class="">
         <!-- recordingTable -->
         <div class="flex flex-wrap rounded bg-white m-2 p-2" tabindex="1">
             <div class="model_header">
                 <label class="text-gray-700 font-bold text-xl">Recording Columns</label>
                 <div class="float-right">
-                    <minus v-if="isShowTab(1)" class="border" theme="filled" size="24" fill="#000000" @click="delTab(1)" />
-                    <plus v-else class="border" theme="filled" size="24" fill="#000000" @click="addTab(1)" />
+                    <minus v-if="isShowTab(1)" theme="filled" size="24" fill="#000000" @click="delTab(1)" />
+                    <plus v-else theme="filled" size="24" fill="#000000" @click="addTab(1)" />
                 </div>
             </div>
             <div class="model_content" v-if="isShowTab(1)">
@@ -111,13 +111,3 @@ export default {
     }
 }
 </script>
-
-<style lang="postcss" scoped>
-.model_header {
-    @apply w-full text-center my-1;
-}
-
-.model_content {
-    @apply w-full;
-}
-</style>

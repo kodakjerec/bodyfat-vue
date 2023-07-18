@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full">
+    <div class="">
         <div class="flex justify-center items-center">
             <p class="text-2xl font-bold text-center mt-2">體脂紀錄</p>
             <weight theme="filled" size="24" fill="#000000" @click="randomValue" />
@@ -14,9 +14,11 @@
                 <input v-else :type="item.colType" :id="item.colName" class="input py-2 w-1/2" v-model="recorder[item.colName]" @focus="inputFocus($event)" :disabled="saving">
             </label>
         </template>
-        <button class="btn font-black w-full mt-1 text-4xl text-center" @click="save" :disabled="saving">
-            <save theme="filled" size="36" fill="#000000" /><span>SAVE</span>
-        </button>
+        <div class="flex justify-center mt-2">
+            <button class="btn flex items-center px-2" @click="save" :disabled="saving">
+                <save theme="filled" size="24" fill="#000000" /><span>SAVE</span>
+            </button>
+        </div>
     </div>
 </template>
 <script lang="ts">

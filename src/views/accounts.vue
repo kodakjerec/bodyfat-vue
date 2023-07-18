@@ -1,11 +1,11 @@
 <template>
     <!-- Accounts -->
-    <div class="flex-wrap rounded bg-amber-500 m-2 p-2" tabindex="0">
+    <div class="flex flex-wrap rounded bg-amber-500 m-2 p-2" tabindex="0">
         <div class="model_header">
-            <label class="text-gray-700 font-bold text-xl">Accounts Link</label>
+            <label class="text-gray-700 font-bold text-xl">Accounts</label>
             <div class="float-right">
-                <minus v-if="isShowTab(0)" class="border" theme="filled" size="24" fill="#000000" @click="delTab(0)" />
-                <plus v-else class="border" theme="filled" size="24" fill="#000000" @click="addTab(0)" />
+                <minus v-if="isShowTab(0)" theme="filled" size="24" fill="#000000" @click="delTab(0)" />
+                <plus v-else theme="filled" size="24" fill="#000000" @click="addTab(0)" />
             </div>
         </div>
         <div class="model_content" v-if="isShowTab(0)">

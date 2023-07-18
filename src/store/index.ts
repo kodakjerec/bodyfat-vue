@@ -28,10 +28,12 @@ export const storeSettings = defineStore({
 
     googleOAuth2token: "" as any, // google OAuth2 token
     googleDriveFileName: "BodyFatRecorder.txt",
-    isSync: false, // 是否有問過同步
 
-    eChartSetting: {},
+    eChartSetting: {}, // eChart setting
     nowLoading: "", // local loading mask
+
+    isSync: false, // 是否有問過同步
+    isIntro: true // 第一次登入
   }),
   getters: {
     getRecordingTableDefault() {
@@ -58,7 +60,6 @@ export const storeSettings = defineStore({
           state.recordingTable = this.getRecordingTableDefault;
         }
       }
-
       return state.recordingTable;
     },
     getLastPath(state) {
@@ -67,10 +68,9 @@ export const storeSettings = defineStore({
         if (tempData) {
           state.lastPath = tempData;
         } else {
-          state.lastPath = "settings";
+          state.lastPath = "home";
         }
       }
-
       return state.lastPath;
     },
     getBodyFatDataList(state) {
@@ -91,7 +91,6 @@ export const storeSettings = defineStore({
         if (!aesToken) return "";
         state.googleOAuth2token = JSON.parse(AES.decrypt(aesToken, state.secretKey).toString(encUtf8));
       }
-
       return state.googleOAuth2token;
     },
     getIsSync(state) {
@@ -99,8 +98,14 @@ export const storeSettings = defineStore({
       if (tempData) {
         state.isSync = JSON.parse(tempData);
       }
-
       return state.isSync;
+    },
+    getIsIntro(state) {
+      const tempData = storageGet("isIntro");
+      if (tempData) {
+        state.isIntro = JSON.parse(tempData);
+      }
+      return state.isIntro;
     },
   },
   actions: {
@@ -138,6 +143,10 @@ export const storeSettings = defineStore({
       this.isSync = status;
       storageSet("isSync", JSON.stringify(this.isSync));
     },
+    setIsIntro(status: boolean) {
+      this.isIntro = status;
+      storageSet("isIntro", JSON.stringify(this.isSync));
+    }
   },
 });
 

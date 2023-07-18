@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full m-2">
+    <div class="h-5/6 m-2">
         <calendar-view
             :show-date="showDate"
             :time-format-options="{ hour: 'numeric', minute: '2-digit'}"
@@ -144,7 +144,7 @@ export default {
     }
 
     .cv-header-day, .cv-day {
-        border-color: black;
+        border:1px solid black;
     }
 }
 :deep() {
