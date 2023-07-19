@@ -25,6 +25,7 @@
     "echarts": "^5.4.2",
     "highlight.js": "^11.7.0",
     "intro.js": "^7.0.1",
+    "localforage": "^1.10.0",
     "markdown-it": "^13.0.1",
     "pinia": "^2.0.36",
     "stylus": "^0.59.0",

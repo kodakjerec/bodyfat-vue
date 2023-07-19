@@ -20,7 +20,7 @@ import "intro.js/introjs.css";
 app.provide('intro', introJS());
 // i18n
 import i18n from './libs/i18n';
-
+// 消除背景警告
 import 'default-passive-events';
 
 app

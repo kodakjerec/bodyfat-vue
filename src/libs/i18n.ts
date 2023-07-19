@@ -4,12 +4,11 @@ import en from './languages/en-US.json'
 import { storageGet } from '@/store'
 
 type MessageSchema = typeof zh
-const fromLang = storageGet("lang")
 
 const i18n = createI18n<[MessageSchema], 'zh-TW' | 'en-US'>({
   legacy: true, // 要把 legacy 設為 false，才可以使用 Composition API
-  locale: fromLang,
-  fallbackLocale: fromLang,
+  locale: 'zh-TW',
+  fallbackLocale: 'zh-TW',
   globalInjection: true,
   messages: {
     'zh-TW': zh,

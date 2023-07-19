@@ -1,4 +1,4 @@
-import { storeSettings, storageSet } from ".";
+import { storeSettings } from ".";
 import Swal from "sweetalert2";
 import { load, save } from "@/libs/gCloudStore";
 
