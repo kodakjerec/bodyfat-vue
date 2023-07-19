@@ -2,6 +2,8 @@ import { storeSettings } from ".";
 import Swal from "sweetalert2";
 import { load, save } from "@/libs/gCloudStore";
 
+export const gDriveId: string = "203042550679-snos0ccs48migeeo2kd0mgdtc43vsp90.apps.googleusercontent.com";
+
 /**
  * 上傳本地資料到雲端
  * @returns 
@@ -42,10 +44,12 @@ export async function localStorageToCloud() {
   if (isOverwrite) {
     const userId = userInfo["sub"];
     const eMail = userInfo["email"];
-    const patchResult = await save(userId, eMail, saveData);
+    if (userId && eMail && saveData) {
+      const patchResult = await save(userId, eMail, saveData);
 
-    if (patchResult) {
-      return patchResult;
+      if (patchResult) {
+        return patchResult;
+      }
     }
   }
 

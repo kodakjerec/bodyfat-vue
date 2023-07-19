@@ -25,9 +25,9 @@ import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calen
 import CalendarDialog from "./components/calendarDialog.vue"
 import "@/../node_modules/vue-simple-calendar/dist/style.css"
 import "@/../node_modules/vue-simple-calendar/dist/css/default.css"
-import { storeSettings } from '@/store'
-import dayjs from 'dayjs'
-import { createToaster } from '@meforma/vue-toaster';
+import { storeSettings } from "@/store"
+import dayjs from "dayjs"
+import { createToaster } from "@meforma/vue-toaster";
 
 export default {
     name: "calendar",
@@ -69,13 +69,13 @@ export default {
         this.bringData();
     },
     methods: {
-        bringData() {
+        async bringData() {
             // reset
             this.items=[];
             this.dateCountList = [];
             
             // 讀取資料
-            this.oldDataList = storeSettings().getBodyFatDataList;
+            this.oldDataList =await storeSettings().getBodyFatDataList;
             this.oldDataList.map((row, index)=>{
                 // 日曆元件
                 this.items.push({
@@ -113,7 +113,7 @@ export default {
                 this.showDialog = true;
                 this.dialogItem = item;
             } else {
-                createToaster().error(this.$t('_calendar_errorMsg1'), { position: "top", duration: 2000 });
+                createToaster().error(this.$t("_calendar_errorMsg1"), { position: "top", duration: 2000 });
             }
         },
         closeDialog(event) {

@@ -11,21 +11,21 @@
 </template>
 
 <script lang="ts">
-import { storeSettings } from '@/store';
-import { changeLanguage } from '@/libs/i18n';
+import { storeSettings } from "@/store";
+import { changeLanguage } from "@/libs/i18n";
 
 export default {
     name: "selectLanguage",
     computed: {
         divIsIntro() {
-        return storeSettings().getIsIntro;
+        return storeSettings().isIntro;
         }
     },
     methods: {   
         changeLang(lang: string) {
             changeLanguage(lang);
             storeSettings().setLang(lang);
-            this.$router.go(0)
+            this.$router.go(0);
         }
     }
 }

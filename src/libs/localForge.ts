@@ -5,16 +5,26 @@ localforage.config({
 });
 
 export default class myLocalforge {
-  static get(key:string) {
-    const result = localforage.getItem(key);
+  static async get(key:string) {
+    const result = await localforage.getItem(key);
     return result;
   }
 
-  static async set(key:string, value:any, callback:any) {
+  static set(key:string, value:any, callback:any) {
     localforage.setItem(key,value, callback);
   }
 
   static clear() {
-    localforage.clear;
+    localforage.clear();
+  }
+
+  static iterate() {
+    localforage.iterate((value,key,number)=>{
+      console.log([key,value], number);
+    }).then(()=>{
+      console.log('Iteration has completed.');
+    }).catch((err)=>{
+      console.log(err);
+    })
   }
 }

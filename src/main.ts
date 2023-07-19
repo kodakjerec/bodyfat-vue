@@ -10,18 +10,18 @@ const app = createApp(App);
 
 // google login
 import vue3GoogleLogin from "vue3-google-login";
-import { gDriveId } from "./libs/gDrive";
+import { gDriveId } from "./store/gCloudStore";
 // sweet alert
 import VueSweetalert2 from "vue-sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 // intro.js
 import introJS from "intro.js";
 import "intro.js/introjs.css";
-app.provide('intro', introJS());
+app.provide("intro", introJS());
 // i18n
-import i18n from './libs/i18n';
+import i18n from "./libs/i18n";
 // 消除背景警告
-import 'default-passive-events';
+import "default-passive-events";
 
 app
   .use(router)

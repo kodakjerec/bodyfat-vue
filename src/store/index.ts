@@ -4,24 +4,29 @@ import encUtf8 from "crypto-js/enc-utf8";
 import { localStorageToCloud } from "./gCloudStore";
 import i18n from '@/libs/i18n';
 import myLocalforge from "@/libs/localForge";
+import { toRaw } from "vue";
 
 const { t } = i18n.global
 
 // unify storage method.
 export function storageSet(key, value, cloundSave: boolean = false): void {
-  myLocalforge.set(key, value, ()=>{
+  myLocalforge.set(key, toRaw(value), ()=>{
     if (cloundSave) {
       localStorageToCloud();
     }
   });
 }
-export async function storageGet(key) {
+export async function storageGet(key):Promise<any> {
   const result = await myLocalforge.get(key);
   return result;
 }
 
 export function storageClear() {
   myLocalforge.clear();
+}
+
+export function storageDebug() {
+  myLocalforge.iterate();
 }
 
 export interface recordModule {
@@ -67,7 +72,7 @@ export const storeSettings = defineStore({
       if (state.recordingTable.length === 0) {
         const tempData:any = await storageGet("recordingTable");
         if (tempData) {
-          state.recordingTable = JSON.parse(tempData);
+          state.recordingTable = tempData;
         } else {
           state.recordingTable = this.getRecordingTableDefault;
         }
@@ -89,7 +94,7 @@ export const storeSettings = defineStore({
       if (state.bodyFatDatalist.length === 0) {
         const tempData:any = await storageGet("bodyFatDatalist");
         if (tempData) {
-          state.bodyFatDatalist = JSON.parse(tempData);
+          state.bodyFatDatalist = tempData;
         } else {
           storageSet("bodyFatDatalist", []);
           state.bodyFatDatalist = [];
@@ -101,21 +106,21 @@ export const storeSettings = defineStore({
       if (!state.googleOAuth2token) {
         let aesToken:any = await storageGet("gToken");
         if (!aesToken) return "";
-        state.googleOAuth2token = JSON.parse(AES.decrypt(aesToken, state.secretKey).toString(encUtf8));
+        state.googleOAuth2token = AES.decrypt(aesToken, state.secretKey).toString(encUtf8);
       }
       return state.googleOAuth2token;
     },
     async getIsSync(state) {
       const tempData:any = await storageGet("isSync");
-      if (tempData) {
-        state.isSync = JSON.parse(tempData);
+      if (tempData !== null) {
+        state.isSync = tempData;
       }
       return state.isSync;
     },
     async getIsIntro(state) {
       const tempData:any = await storageGet("isIntro");
-      if (tempData) {
-        state.isIntro = JSON.parse(tempData);
+      if (tempData !== null) {
+        state.isIntro = tempData;
       }
       return state.isIntro;
     },
@@ -142,13 +147,19 @@ export const storeSettings = defineStore({
       storageSet("bodyFatDatalist", this.bodyFatDatalist);
     },
     insertBodyFatDatalist(record: object) {
-      let newRecord = {};
-      newRecord["id"] = this.bodyFatDatalist.length;
-      Object.keys(record).map((key) => {
-        newRecord[key] = record[key];
-      });
-      this.bodyFatDatalist.push(newRecord);
-      storageSet("bodyFatDatalist", this.bodyFatDatalist, true);
+      try {
+        let newRecord = {};
+        newRecord["id"] = this.bodyFatDatalist.length;
+        Object.keys(record).map((key) => {
+          newRecord[key] = record[key];
+        });
+        this.bodyFatDatalist.push(newRecord);
+        storageSet("bodyFatDatalist", this.bodyFatDatalist, true);
+      } catch(err) {
+
+      } finally {
+        return "";
+      }
     },
     deleteBodyFatDatalist(record: object) {
       const findIndex = this.bodyFatDatalist.findIndex((row) => row.id === record["id"]);

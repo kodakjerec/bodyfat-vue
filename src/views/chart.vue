@@ -3,23 +3,21 @@
     <div id="search_content" class="m-2">
         <div>
             <label class="text-gray-700 flex items-center">
-                <span class="label-xl text-base w-1/6">{{ $t('_date_interval') }}</span>
+                <span class="label-xl text-base w-1/6">{{ $t("_date_interval") }}</span>
                 <input type="date" class="input text-base w-1/3" v-model="startDate" :max="today">
                 <span>~</span>
                 <input type="date" class="input text-base w-1/3" v-model="endDate" :max="today">
             </label>
         </div>
     </div>
-    <div @click="event">1234</div>
     <!-- diagram -->
     <eChart1 class="h-5/6" :fromData="filteredList"></eChart1>
 </template>
 
 <script lang="ts">
-import { storeSettings } from '@/store'
-import dayjs from 'dayjs';
-import eChart1 from './components/eChart1.vue'
-import { localStorageToCloud } from '@/store/gCloudStore';
+import { storeSettings } from "@/store"
+import dayjs from "dayjs";
+import eChart1 from "./components/eChart1.vue"
 export default {
     name: "chart",
     components: {
@@ -34,7 +32,7 @@ export default {
     },
     computed: {
         filteredList() {
-            const tempList = storeSettings().getBodyFatDataList;
+            const tempList = storeSettings().bodyFatDatalist;
             const startDateTime = new Date(this.startDate+"T00:00:00").getTime();
             const endDateTime = new Date(this.endDate+"T23:59:59").getTime();
             const result:Array<any> = tempList.filter(row=>{
@@ -48,14 +46,9 @@ export default {
         }
     },
     mounted() {
-        this.startDate = dayjs((new Date()).setDate(-7)).format("YYYY-MM-DD");
+        this.startDate = dayjs((new Date()).setDate(-14)).format("YYYY-MM-DD");
         this.endDate = dayjs(new Date()).format("YYYY-MM-DD");
         this.today = this.endDate;
-    },
-    methods: {
-        event() {
-            localStorageToCloud()
-        }
     }
 }
 </script>

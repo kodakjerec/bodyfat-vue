@@ -18,7 +18,7 @@
 import { Minus, Plus } from "@icon-park/vue-next";
 import { decodeCredential } from "vue3-google-login";
 import { cloundToLocalStorage, localStorageToCloud } from "@/store/gCloudStore";
-import { storeSettings } from '@/store';
+import { storeSettings } from "@/store";
 
 export default {
     name: "accounts",
@@ -47,10 +47,10 @@ export default {
             if (findIndex >= 0) this.showTabs.splice(findIndex, 1);
         },
         // Google Logi
-        callback(response) {
+        async callback(response) {
             // decodeCredential will retrive the JWT payload from the credential
             const userData = decodeCredential(response.credential);
-            const haveToken = storeSettings().getGDriveToken;
+            const haveToken = await storeSettings().getGDriveToken;
             if (haveToken) {
                 cloundToLocalStorage();
             } else {

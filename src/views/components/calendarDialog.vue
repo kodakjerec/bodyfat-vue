@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { Close, Delete } from "@icon-park/vue-next";
-import { storeSettings, type recordModule } from '@/store'
+import { storeSettings, type recordModule } from "@/store"
 import iconNumber from "./iconNumber.vue";
 
 export default {
@@ -62,14 +62,14 @@ export default {
             shockWindow: false
         }
     },
-    mounted() {
-        this.recordingTable = storeSettings().getRecordingTable;
+    async mounted() {
+        this.recordingTable = await storeSettings().getRecordingTable;
         this.recorder = this.fromData;
     },
     methods: {
         // 關閉視窗
         closeDialog(event) {
-            this.$emit('close', event);
+            this.$emit("close", event);
         },
         // 按到白色區域, 震動視窗
         // TODO 現在會順便關閉視窗
@@ -78,7 +78,7 @@ export default {
 
             setTimeout(() => {
                 this.shockWindow = false;
-                this.myTitle = this.$t('_calendar_shockWindow');
+                this.myTitle = this.$t("_calendar_shockWindow");
             }, 50);
 
             setTimeout(() => {
@@ -88,13 +88,13 @@ export default {
         // 刪除資料
         async deleteItem() {
             const result = await this.$swal({
-                title: this.$t('_calendar_deleteRecord'),
+                title: this.$t("_calendar_deleteRecord"),
                 showCancelButton: true,
-                confirmButtonText: 'Ok'
+                confirmButtonText: "Ok"
             });
 
             if (result.isConfirmed) {
-                this.$emit('delete', this.fromData.id);
+                this.$emit("delete", this.fromData.id);
             }
         },
         inputFocus(event: any) {

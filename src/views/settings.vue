@@ -8,9 +8,9 @@
                     <minus v-if="isShowTab(8)" theme="filled" size="24" fill="#000000" @click="delTab(8)" />
                     <plus v-else theme="filled" size="24" fill="#000000" @click="addTab(8)" />
                 </div>
-                <div class="model_content" v-if="isShowTab(8)">
-                    <selectLanguage></selectLanguage>
-                </div>
+            </div>
+            <div class="model_content" v-if="isShowTab(8)">
+                <selectLanguage></selectLanguage>
             </div>
         </div>
         <!-- recordingTable -->
@@ -53,9 +53,21 @@
                         </div>
                     </label>
                 </template>
-                <div class="flex justify-center mt-2">
-                    <button class="inAppBtn" @click="resetRecordingTable">
-                        <refresh theme="filled" size="24" fill="#000000" /><span>Reset</span>
+            </div>
+        </div>
+        <!-- Others -->
+        <div class="flex flex-wrap rounded bg-white m-2" tabindex="10">
+            <div class="model_header">
+                <label class="text-gray-700 font-bold text-xl">Others</label>
+                <div class="float-right">
+                    <minus v-if="isShowTab(10)" theme="filled" size="24" fill="#000000" @click="delTab(10)" />
+                    <plus v-else theme="filled" size="24" fill="#000000" @click="addTab(10)" />
+                </div>
+            </div>
+            <div class="model_content" v-if="isShowTab(10)">
+                <div class="flex justify-center">
+                    <button class="inAppBtn m-2" @click="restAll">
+                        <refresh theme="filled" size="24" fill="#000000" /><span>Reset(Except Records)</span>
                     </button>
                 </div>
             </div>
@@ -65,10 +77,10 @@
 
 <script lang="ts">
 import { Minus, Plus, AddItem, Delete, Refresh } from "@icon-park/vue-next";
-import { storeSettings, type recordModule } from '@/store/index';
-import { createToaster } from '@meforma/vue-toaster';
+import { storageClear, storeSettings, type recordModule } from "@/store/index";
+import { createToaster } from "@meforma/vue-toaster";
 import iconNumber from "./components/iconNumber.vue";
-import selectLanguage from './components/selectLanguage.vue';
+import selectLanguage from "./components/selectLanguage.vue";
 
 export default {
     name: "settings",
@@ -79,11 +91,11 @@ export default {
     data() {
         return {
             recordingTable: [] as Array<recordModule>,
-            showTabs: [9] as Array<number>
+            showTabs: [8, 9, 10] as Array<number>
         }
     },
-    mounted() {
-        this.recordingTable = storeSettings().getRecordingTable;
+    async mounted() {
+        this.recordingTable = await storeSettings().getRecordingTable;
     },
     methods: {
         // 分頁操作
@@ -114,15 +126,18 @@ export default {
         delRow(fromId: number) {
             const findIndex = this.recordingTable.findIndex(item => item.id === fromId);
             if (findIndex >= 0) this.recordingTable.splice(findIndex, 1);
-            this.saveRecordingTable(`刪除成功`);
+            this.saveRecordingTable(this.$t("_delete_success"));
         },
-        saveRecordingTable(msg: string = `儲存成功`) {
+        saveRecordingTable(msg: string = this.$t("_save_success")) {
             storeSettings().setRecordingTable(this.recordingTable);
-            createToaster().success(msg, { position: "top", duration: 1000 });
+            createToaster().success(msg, { position: "top", duration: 2000 });
         },
-        resetRecordingTable() {
-            this.recordingTable = storeSettings().getRecordingTableDefault;
-            this.saveRecordingTable(`還原預設`);
+        async restAll() {
+            const tempRecords = await storeSettings().getBodyFatDataList;
+            storageClear();
+            storeSettings().setBodyFatDatalist(tempRecords);
+            this.recordingTable = await storeSettings().getRecordingTableDefault;
+            this.saveRecordingTable(this.$t("_settings_resetAll"));
         }
     }
 }

@@ -15,16 +15,16 @@
     </div>
     <div id="app_footer" class="sticky bottom-0 w-full flex">
       <div class="appFooterBtn w-1/4 flex" @click="gotoPath('home')" id="btn_home">
-        <home theme="two-tone" size="24" :fill="['#fff' ,'#6D28D9']"/><span>{{ $t('_app_footer_home') }}</span>
+        <home theme="two-tone" size="24" :fill="['#fff' ,'#6D28D9']"/><span>{{ $t("_app_footer_home") }}</span>
       </div>
       <div class="appFooterBtn w-1/4 flex" @click="gotoPath('calendar')" id="btn_calendar">
-        <calendarDot theme="two-tone" size="24" :fill="['#fff' ,'#6D28D9']"/><span>{{ $t('_app_footer_calendar') }}</span>
+        <calendarDot theme="two-tone" size="24" :fill="['#fff' ,'#6D28D9']"/><span>{{ $t("_app_footer_calendar") }}</span>
       </div>
       <div class="appFooterBtn w-1/4 flex" @click="gotoPath('chart')" id="btn_chart">
-        <chartHistogram theme="two-tone" size="24" :fill="['#fff' ,'#6D28D9']"/><span>{{ $t('_app_footer_chart') }}</span>
+        <chartHistogram theme="two-tone" size="24" :fill="['#fff' ,'#6D28D9']"/><span>{{ $t("_app_footer_chart") }}</span>
       </div>
       <div class="appFooterBtn w-1/4 flex" @click="gotoPath('settings')" id="btn_settings">
-        <setting theme="two-tone" size="24" :fill="['#fff' ,'#6D28D9']"/><span>{{ $t('_app_footer_settings') }}</span>
+        <setting theme="two-tone" size="24" :fill="['#fff' ,'#6D28D9']"/><span>{{ $t("_app_footer_settings") }}</span>
       </div>
     </div>
     <select-language v-if="divIsIntro" v-show="introStepNow===0"></select-language>
@@ -32,32 +32,32 @@
 </template>
 <script lang="ts">
 import { Home, CalendarDot, ChartHistogram, Setting } from "@icon-park/vue-next";
-import { storeSettings } from '@/store/index';
+import { storageDebug, storeSettings } from "@/store/index";
 import accounts from "./views/accounts.vue";
-import selectLanguage from './views/components/selectLanguage.vue';
+import selectLanguage from "./views/components/selectLanguage.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     Home, CalendarDot, ChartHistogram, Setting,
     accounts, selectLanguage
   },
   data() {
     return {
-      nowPath: 'home',
+      nowPath: "home",
       lastActiveTime: null,
       introOption: {
 	    // 这里是更换成中文（默认英文）
-	    prevLabel: this.$t('prev'),
-	    nextLabel: this.$t('next'),
-	    skipLabel: this.$t('skip'),
-	    doneLabel: this.$t('done'),
+	    prevLabel: this.$t("_prev"),
+	    nextLabel: this.$t("_next"),
+	    skipLabel: this.$t("_skip"),
+	    doneLabel: this.$t("_done"),
 	    /* 引导说明框相对高亮说明区域的位置 */
-	    tooltipPosition: 'top',
+	    tooltipPosition: "top",
 	    /* 引导说明文本框的样式 */
-	    tooltipClass: 'intro-tooltip',
+	    tooltipClass: "intro-tooltip",
 	    /* 说明高亮区域的样式 */
-	    highlightClass: 'intro-highlight',
+	    highlightClass: "intro-highlight",
 	    /* 是否使用键盘Esc退出 */
 	    exitOnEsc: true,
 	    /* 是否允许点击空白处退出 */
@@ -79,7 +79,7 @@ export default {
 	    /* 遮罩层的透明度 */
 	    overlayOpacity: 0.3,
 	    /* 当位置选择自动的时候，位置排列的优先级 */
-	    positionPrecedence: ['bottom', 'top', 'right', 'left'],
+	    positionPrecedence: ["bottom", "top", "right", "left"],
 	    /* 是否禁止与元素的相互关联 */
 	    disableInteraction: false,
 	    /* 是否在第一步隐藏上一步 */
@@ -97,49 +97,52 @@ export default {
       return storeSettings().nowLoading;
     },
     divIsIntro() {
-    return storeSettings().getIsIntro;
+      return storeSettings().isIntro;
     }
   },
   async mounted() {
-    storeSettings().getBodyFatDataList;
+    await storeSettings().getBodyFatDataList;
+    await storeSettings().getLastPath;
+    await storeSettings().getIsIntro;
     
-    const lastPath = storeSettings().getLastPath;
+    const lastPath = storeSettings().lastPath;
     this.nowPath = lastPath;
     
-    const isIntro = storeSettings().getIsIntro;
-    if (isIntro)
+    const isIntro = storeSettings().isIntro;
+    if (isIntro) {
       this.initGuide();
+    }
   },
-  inject: ['intro'],
+  inject: ["intro"],
   methods: {
     gotoPath(path: string) {
       this.nowPath = path;
       storeSettings().setLastPath(this.nowPath);
     },
     initGuide() {
-      this.gotoPath('home');
+      this.gotoPath("home");
       // 绑定标签元素的选择器数组
       this.introOption.steps = [
         {
-          title: 'Welcome',
-          element: '#chooseLanguage',
-          intro: 'Select Your Preferred Language',
+          title: "Welcome",
+          element: "#chooseLanguage",
+          intro: "Select Your Preferred Language",
         },
         {
-          element: '#btn_home',
-          intro: this.$t('_intro_step1')+'💪',
+          element: "#btn_home",
+          intro: this.$t("_intro_step1")+"💪",
         },
         {
-          element: '#btn_calendar',
-          intro: this.$t('_intro_step2')+'🧐',
+          element: "#btn_calendar",
+          intro: this.$t("_intro_step2")+"🧐",
         },
         {
-          element: '#btn_chart',
-          intro: this.$t('_intro_step3') +'😘',
+          element: "#btn_chart",
+          intro: this.$t("_intro_step3") +"😘",
         },
         {
-          element: '#btn_settings',
-          intro: this.$t('_intro_step4')+'☁️',
+          element: "#btn_settings",
+          intro: this.$t("_intro_step4")+"☁️",
         },
       ]
       this.intro
@@ -150,32 +153,32 @@ export default {
                 this.introStepNow = 0;break;
               case "btn_home":
                 this.introStepNow = 1;
-                this.gotoPath('home');break;
+                this.gotoPath("home");break;
               case "btn_calendar":
                 this.introStepNow = 2;
-                this.gotoPath('calendar');break;
+                this.gotoPath("calendar");break;
               case "btn_chart":
                 this.introStepNow = 3;
-                this.gotoPath('chart');break;
+                this.gotoPath("chart");break;
               case "btn_settings":
                 this.introStepNow = 4;
-                this.gotoPath('settings');break;
+                this.gotoPath("settings");break;
             }
           })
           // 点击结束按钮后执行的事件
           .oncomplete(() => {
             storeSettings().setIsIntro(false);
-            console.log('点击结束按钮后执行的事件')
+            // console.log("点击结束按钮后执行的事件")
           })
           // 点击跳过按钮后执行的事件
           .onexit(() => {
             storeSettings().setIsIntro(false);
-            console.log('点击跳过按钮后执行的事件')
+            // console.log("点击跳过按钮后执行的事件")
           })
           // 确认完毕之后执行的事件
           .onbeforeexit(() => {
             storeSettings().setIsIntro(false);
-            console.log('确认完毕之后执行的事件')
+            // console.log("确认完毕之后执行的事件")
           })
           .start()
 		}

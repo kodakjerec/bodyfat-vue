@@ -4,15 +4,15 @@
 </template>
 
 <script lang="ts">
-import * as echarts from 'echarts'
-import { markRaw } from 'vue'
-import { storeSettings } from '@/store'
+import * as echarts from "echarts"
+import { markRaw } from "vue"
+import { storeSettings } from "@/store"
 
 export default {
     name: "eChart1",
     props: {
         fromData: {
-            type: Array,
+            type: Object,
             required: true
         }
     },
@@ -24,8 +24,8 @@ export default {
                 title: {
                 },
                 tooltip: {
-                    trigger: 'axis',
-                    renderMode: 'richText'
+                    trigger: "axis",
+                    renderMode: "richText"
                 },
                 legend: {
                     selectedMode: true,
@@ -34,46 +34,46 @@ export default {
                     itemHeight: 20
                 },
                 grid: {
-                    left: '3%',
-                    right: '4%',
-                    bottom: '3%',
+                    left: "3%",
+                    right: "4%",
+                    bottom: "3%",
                     containLabel: true
                 },
                 toolbox: {
                 },
                 xAxis: {
-                    type: 'category',
+                    type: "category",
                     boundaryGap: false
                 },
                 yAxis: {
-                    type: 'value'
+                    type: "value"
                 },
                 series: [],
             }
         }
     },
     watch: {
-        fromData() {
-            this.preLoading();
+        async fromData() {
+            await this.preLoading();
             this.eChart.setOption(this.option);
         }
     },
     mounted() {
         this.eChart = markRaw(echarts.init(this.$refs["eChart-container"]));
-        this.eChart.on('legendselectchanged', this.legendselectchanged);
+        this.eChart.on("legendselectchanged", this.legendselectchanged);
     },
     created() {
-        window.addEventListener('resize', this.resizeHandler);
+        window.addEventListener("resize", this.resizeHandler);
     },
     destroyed() {
-        window.removeEventListener('resize', this.resizeHandler);
+        window.removeEventListener("resize", this.resizeHandler);
     },
     methods: {
-        preLoading() {
+        async preLoading() {
             // reset
             this.option.series = [];
-
-            const recordingTable: Array<any> = storeSettings().getRecordingTable;
+            
+            const recordingTable: Array<any> = await storeSettings().getRecordingTable;
             let originData = Array.from(this.fromData);
             // y軸種類, 此處放置欄位名稱
             let contentList = {};
@@ -106,8 +106,8 @@ export default {
                 } else {
                     this.option.series.push({
                         name: key,
-                        type: 'line',
-                        stack: 'Total',
+                        type: "line",
+                        stack: "Total",
                         data: value
                     })
                 }

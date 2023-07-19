@@ -1,7 +1,7 @@
 <template>
     <div class="">
         <div class="flex justify-center items-center">
-            <p class="text-2xl font-bold text-center mt-2">{{ $t('_bodyFatRecorder') }}</p>
+            <p class="text-2xl font-bold text-center mt-2">{{ $t("_bodyFatRecorder") }}</p>
             <weight theme="filled" size="24" fill="#000000" @click="randomValue" />
         </div>
         <template v-for="item of recordingTable" :key="item.id">
@@ -23,13 +23,13 @@
 </template>
 <script lang="ts">
 import { Save, Weight } from "@icon-park/vue-next";
-import { storeSettings, type recordModule } from '@/store';
-import { createToaster } from '@meforma/vue-toaster';
+import { storeSettings, type recordModule } from "@/store";
+import { createToaster } from "@meforma/vue-toaster";
 import iconNumber from "./components/iconNumber.vue";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
 export default {
-    name: 'home',
+    name: "home",
     components: {
         Save, Weight,
         iconNumber
@@ -41,8 +41,8 @@ export default {
             saving: false
         }
     },
-    mounted() {
-        this.recordingTable = storeSettings().getRecordingTable;
+    async mounted() {
+        this.recordingTable = await storeSettings().getRecordingTable;
         this.reset();
     },
     methods: {
@@ -60,8 +60,8 @@ export default {
         },
         randomValue() {
             // randomText
-            let result = '';
-            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            let result = "";
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             for (let i = 0; i < length; i++) {
                 result += letters.charAt(Math.floor(Math.random() * letters.length));
             }
@@ -80,7 +80,7 @@ export default {
             const date = randomDate.getDate();
             const hour = randomDate.getHours();
             const minute = randomDate.getMinutes();
-            const resultDate = `${year}-${month.toString().padStart(2, '0')}-${date.toString().padStart(2, '0')}T${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+            const resultDate = `${year}-${month.toString().padStart(2, "0")}-${date.toString().padStart(2, "0")}T${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
 
             this.recordingTable.map((item) => {
                 switch (item.colType) {
@@ -97,7 +97,7 @@ export default {
             this.saving = true;
             let errorMsg = "";
             if (!this.recorder["0"]) {
-                errorMsg = this.$t('_col_date_errorMsg1');
+                errorMsg = this.$t("_col_date_errorMsg1");
             }
 
             if (errorMsg.length > 0) {
@@ -105,15 +105,8 @@ export default {
                 return;
             }
 
-            storeSettings().nowLoading = "Saving. Please waiting...";
+            storeSettings().nowLoading = this.$t("_home_save");
             storeSettings().insertBodyFatDatalist(this.recorder);
-            createToaster().success(this.$t('_save_success'), {
-                position: "top", duration: 1000, onClose: () => {
-                    this.saving = false;
-                    this.reset();
-                    storeSettings().nowLoading = "";
-                }
-            });
         },
         inputFocus(event: any) {
             event.target.select();
