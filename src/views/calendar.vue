@@ -1,22 +1,12 @@
 <template>
-    <div class="h-full mt-2">
-        <calendar-view
-            :show-date="showDate"
-            :time-format-options="{ hour: 'numeric', minute: '2-digit'}"
-            :class="'theme-default'"
-            :current-period-label="'icons'"
-            :enable-date-selection="true"
-            :date-classes="myDateClasses"
-            @click-date="clickDate"
-            @click-item="clickItem"
-            class="calendarClass"
-            :items="items">
+    <div class="h-full">
+        <calendar-view :show-date="showDate" :time-format-options="{ hour: 'numeric', minute: '2-digit' }" :class="'theme-default'" :current-period-label="'icons'" :enable-date-selection="true" :date-classes="myDateClasses" @click-date="clickDate" @click-item="clickItem" class="calendarClass" :items="items">
             <template #header="{ headerProps }">
                 <calendar-view-header :header-props="headerProps" @input="setShowDate">
                 </calendar-view-header>
             </template>
         </calendar-view>
-        <calendar-dialog v-if="showDialog" :title="this.$t('_bodyFatRecorder')" :fromData="dialogItem" @close="closeDialog" @delete="deleteItemDialog"/>
+        <calendar-dialog v-if="showDialog" :title="this.$t('_bodyFatRecorder')" :fromData="dialogItem" @close="closeDialog" @delete="deleteItemDialog" />
     </div>
 </template>
 
@@ -47,23 +37,23 @@ export default {
     },
     computed: {
         myDateClasses() {
-            const o={};
+            const o = {};
 
-            this.dateCountList.map(row=>{
-                switch(row.counts) {
+            this.dateCountList.map(row => {
+                switch (row.counts) {
                     case 1:
-                        o[row.startDate] = ["number1"];break;
+                        o[row.startDate] = ["number1"]; break;
                     case 2:
-                        o[row.startDate] = ["number2"];break;
+                        o[row.startDate] = ["number2"]; break;
                     case 3:
-                        o[row.startDate] = ["number3"];break;
+                        o[row.startDate] = ["number3"]; break;
                     default:
-                        o[row.startDate] = ["numberM"];break;
+                        o[row.startDate] = ["numberM"]; break;
                 }
             })
 
-			return o
-		},
+            return o
+        },
     },
     mounted() {
         this.bringData();
@@ -71,12 +61,12 @@ export default {
     methods: {
         async bringData() {
             // reset
-            this.items=[];
+            this.items = [];
             this.dateCountList = [];
-            
+
             // 讀取資料
-            this.oldDataList =await storeSettings().getBodyFatDataList;
-            this.oldDataList.map((row, index)=>{
+            this.oldDataList = await storeSettings().getBodyFatDataList;
+            this.oldDataList.map((row, index) => {
                 // 日曆元件
                 this.items.push({
                     id: row["id"],
@@ -87,9 +77,9 @@ export default {
 
                 // 統計一天幾次
                 const dateString = dayjs(row["0"]).format("YYYY-MM-DD");
-                let findObject = this.dateCountList.find(row=> row.startDate === dateString);
+                let findObject = this.dateCountList.find(row => row.startDate === dateString);
                 if (findObject) {
-                    findObject.counts = parseInt(findObject.counts)+1;
+                    findObject.counts = parseInt(findObject.counts) + 1;
                 } else {
                     this.dateCountList.push({
                         startDate: dateString,
@@ -108,7 +98,7 @@ export default {
             console.log(event);
         },
         clickItem(event) {
-            const item = this.oldDataList.find(item=>item.id===event.id);
+            const item = this.oldDataList.find(item => item.id === event.id);
             if (item) {
                 this.showDialog = true;
                 this.dialogItem = item;
@@ -124,7 +114,7 @@ export default {
             storeSettings().deleteBodyFatDatalist(this.dialogItem);
             this.showDialog = false;
             this.dialogItem = null;
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 this.bringData();
             });
         }
@@ -136,29 +126,53 @@ export default {
 .calHeight {
     height: calc(100vh - 42px);
 }
+
 .calendarClass :deep() {
-    .cv-header-nav > button {
-        color: black;
-        font-weight: 900;
-        border: none;
+    .cv-header-nav>button {
+        @apply font-black border-none text-black text-lg;
     }
 
-    .cv-header-day, .cv-day {
-        border:1px solid black;
+    .cv-header {
+        @apply bg-orange-500 border border-black;
+    }
+
+    .cv-header-day {
+        @apply bg-orange-400 border border-black;
+    }
+
+    .cv-day {
+        @apply border border-black;
+    }
+
+    .past,
+    .outsideOfMonth {
+        @apply bg-orange-300
+    }
+
+    .cv-item {
+        @apply bg-yellow-500 border-yellow-600;
     }
 }
+
 :deep() {
     .number1::after {
-        content: "\0031\FE0F\20E3";@apply bg-yellow-200 h-4;
+        content: "\0031\FE0F\20E3";
+        @apply bg-yellow-200 h-4;
     }
+
     .number2::after {
-        content: "\0032\FE0F\20E3";@apply bg-yellow-200 h-4;
+        content: "\0032\FE0F\20E3";
+        @apply bg-yellow-200 h-4;
     }
+
     .number3::after {
-        content: "\0033\FE0F\20E3";@apply bg-yellow-200 h-4;
+        content: "\0033\FE0F\20E3";
+        @apply bg-yellow-200 h-4;
     }
+
     .numberM::after {
-        content: "\0023\FE0F\20E3";@apply bg-yellow-200 h-4;
+        content: "\0023\FE0F\20E3";
+        @apply bg-yellow-200 h-4;
     }
-} 
+}
 </style>

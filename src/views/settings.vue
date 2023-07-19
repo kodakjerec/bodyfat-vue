@@ -1,7 +1,7 @@
 <template>
     <div class="">
         <!-- language -->
-        <div class="flex flex-wrap rounded bg-white m-2" tabindex="8">
+        <div class="flex flex-wrap rounded appSecondColor m-2" tabindex="8">
             <div class="model_header">
                 <label class="text-gray-700 font-bold text-xl">Language</label>
                 <div class="float-right">
@@ -14,7 +14,7 @@
             </div>
         </div>
         <!-- recordingTable -->
-        <div class="flex flex-wrap rounded bg-white m-2" tabindex="9">
+        <div class="flex flex-wrap rounded appSecondColor m-2" tabindex="9">
             <div class="model_header">
                 <label class="text-gray-700 font-bold text-xl">Recording Columns</label>
                 <div class="float-right">
@@ -41,7 +41,7 @@
                         </span>
                         <span v-if="item.id < 8" class="w-1/3 text-center">{{ item.colName }}</span>
                         <input v-else class="input w-1/3 self-center" type="text" v-model="item.colName" @change="saveRecordingTable()">
-                        <select class="w-1/3" v-model="item.colType" @change="saveRecordingTable()">
+                        <select class="w-1/3 select" v-model="item.colType" @change="saveRecordingTable()">
                             <option value="text">Text</option>
                             <option value="datetime-local">Date</option>
                             <option value="number">Number</option>
@@ -56,7 +56,7 @@
             </div>
         </div>
         <!-- Others -->
-        <div class="flex flex-wrap rounded bg-white m-2" tabindex="10">
+        <div class="flex flex-wrap rounded appSecondColor m-2" tabindex="10">
             <div class="model_header">
                 <label class="text-gray-700 font-bold text-xl">Others</label>
                 <div class="float-right">
