@@ -2,31 +2,27 @@ import { createPinia, defineStore } from "pinia";
 import AES from "crypto-js/aes";
 import encUtf8 from "crypto-js/enc-utf8";
 import { localStorageToCloud } from "./gCloudStore";
-import i18n from '@/libs/i18n';
+import i18n from "@/libs/i18n";
 import myLocalforge from "@/libs/localForge";
 import { toRaw } from "vue";
 
-const { t } = i18n.global
+const { t } = i18n.global;
 
 // unify storage method.
 export function storageSet(key, value, cloundSave: boolean = false): void {
-  myLocalforge.set(key, toRaw(value), ()=>{
+  myLocalforge.set(key, toRaw(value), () => {
     if (cloundSave) {
       localStorageToCloud();
     }
   });
 }
-export async function storageGet(key):Promise<any> {
+export async function storageGet(key): Promise<any> {
   const result = await myLocalforge.get(key);
   return result;
 }
 
 export function storageClear() {
   myLocalforge.clear();
-}
-
-export function storageDebug() {
-  myLocalforge.iterate();
 }
 
 export interface recordModule {
@@ -50,90 +46,67 @@ export const storeSettings = defineStore({
 
     isSync: false, // 是否有問過同步
     isIntro: true, // 第一次登入
-    lang: 'zh-TW' // 語系
+    lang: "zh-TW", // 語系
   }),
   getters: {
     getRecordingTableDefault() {
       return [
-        { id: 0, colName: t('_col_date'), colType: "datetime-local" },
-        { id: 1, colName: t('_col_weight'), colType: "number" },
-        { id: 2, colName: t('_col_bmi'), colType: "number" },
-        { id: 3, colName: t('_col_bodyFatPer'), colType: "number" },
-        { id: 4, colName: t('_col_muscleMass'), colType: "number" },
-        { id: 5, colName: t('_col_visceralFat'), colType: "number" },
-        { id: 6, colName: t('_col_bodyAge'), colType: "number" },
-        { id: 7, colName: t('_col_basalMetabolicRate'), colType: "number" },
-        { id: 8, colName: t('_col_diastolicBloodPressure'), colType: "number" },
-        { id: 9, colName: t('_col_systolicBloodPressure'), colType: "number" },
-        { id: 10, colName: t('_col_bloodSugar'), colType: "number" },
+        { id: 0, colName: t("_col_date"), colType: "datetime-local" },
+        { id: 1, colName: t("_col_weight"), colType: "number" },
+        { id: 2, colName: t("_col_bmi"), colType: "number" },
+        { id: 3, colName: t("_col_bodyFatPer"), colType: "number" },
+        { id: 4, colName: t("_col_muscleMass"), colType: "number" },
+        { id: 5, colName: t("_col_visceralFat"), colType: "number" },
+        { id: 6, colName: t("_col_bodyAge"), colType: "number" },
+        { id: 7, colName: t("_col_basalMetabolicRate"), colType: "number" },
+        { id: 8, colName: t("_col_diastolicBloodPressure"), colType: "number" },
+        { id: 9, colName: t("_col_systolicBloodPressure"), colType: "number" },
+        { id: 10, colName: t("_col_bloodSugar"), colType: "number" },
       ];
     },
-    async getRecordingTable(state) {
-      if (state.recordingTable.length === 0) {
-        const tempData:any = await storageGet("recordingTable");
-        if (tempData) {
-          state.recordingTable = tempData;
-        } else {
-          state.recordingTable = this.getRecordingTableDefault;
-        }
-      }
+    getRecordingTable(state) {
       return state.recordingTable;
     },
-    async getLastPath(state) {
-      if (!state.lastPath) {
-        const tempData:any = await storageGet("lastPath");
-        if (tempData) {
-          state.lastPath = tempData;
-        } else {
-          state.lastPath = "home";
-        }
-      }
+    getLastPath(state) {
       return state.lastPath;
     },
-    async getBodyFatDataList(state) {
-      if (state.bodyFatDatalist.length === 0) {
-        const tempData:any = await storageGet("bodyFatDatalist");
-        if (tempData) {
-          state.bodyFatDatalist = tempData;
-        } else {
-          storageSet("bodyFatDatalist", []);
-          state.bodyFatDatalist = [];
-        }
-      }
+    getBodyFatDataList(state) {
       return state.bodyFatDatalist;
     },
-    async getGDriveToken(state) {
-      if (!state.googleOAuth2token) {
-        let aesToken:any = await storageGet("gToken");
-        if (!aesToken) return "";
-        state.googleOAuth2token = AES.decrypt(aesToken, state.secretKey).toString(encUtf8);
-      }
+    getGDriveToken(state) {
       return state.googleOAuth2token;
     },
-    async getIsSync(state) {
-      const tempData:any = await storageGet("isSync");
-      if (tempData !== null) {
-        state.isSync = tempData;
-      }
+    getIsSync(state) {
       return state.isSync;
     },
-    async getIsIntro(state) {
-      const tempData:any = await storageGet("isIntro");
-      if (tempData !== null) {
-        state.isIntro = tempData;
-      }
+    getIsIntro(state) {
       return state.isIntro;
     },
-    async getLang(state) {
-      const tempData:any = await storageGet("lang");
-      if (tempData) {
-        state.lang = tempData;
-      }
-
-      return state.lang
-    }
+    getLang(state) {
+      return state.lang;
+    },
   },
   actions: {
+    async setFromLocalforge() {
+      const keyList = await myLocalforge.iterate();
+
+      const stateKeys = Object.keys(this.$state);
+      for (let i = 0; i < stateKeys.length; i++) {
+        let key = stateKeys[i];
+        // 從 localforge 回覆記錄到 state
+        if (keyList.includes(key)) {
+          this[key] = await storageGet(key);
+        }
+
+        // state依然沒資料的情況
+        switch (key) {
+          case "recordingTable":
+            if (this.recordingTable.length === 0) {
+              this.setRecordingTable(this.getRecordingTableDefault);
+            }
+        }
+      }
+    },
     setLastPath(path: string) {
       this.lastPath = path;
       storageSet("lastPath", this.lastPath);
@@ -155,8 +128,7 @@ export const storeSettings = defineStore({
         });
         this.bodyFatDatalist.push(newRecord);
         storageSet("bodyFatDatalist", this.bodyFatDatalist, true);
-      } catch(err) {
-
+      } catch (err) {
       } finally {
         return "";
       }
@@ -169,7 +141,7 @@ export const storeSettings = defineStore({
     setGDriveToken(token: object) {
       this.googleOAuth2token = token;
       const aesAPIKey = AES.encrypt(JSON.stringify(token), this.secretKey).toString();
-      storageSet("gToken", aesAPIKey, false);
+      storageSet("googleOAuth2token", aesAPIKey, false);
     },
     setEChartSetting(fromSetting: object) {
       storageSet("eChartSetting", fromSetting);
@@ -182,10 +154,10 @@ export const storeSettings = defineStore({
       this.isIntro = status;
       storageSet("isIntro", this.isIntro);
     },
-    setLang(lang:string) {
+    setLang(lang: string) {
       this.lang = lang;
       storageSet("lang", lang);
-    }
+    },
   },
 });
 

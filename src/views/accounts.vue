@@ -9,7 +9,7 @@
             </div>
         </div>
         <div class="model_content" v-if="isShowTab(0)">
-            <GoogleLogin :callback="callback" prompt auto-login small />
+            <GoogleLogin :callback="callback" small />
         </div>
     </div>
 </template>
@@ -30,7 +30,7 @@ export default {
             showTabs: [0, 1] as Array<number>
         }
     },
-    methods: {  
+    methods: {
         // 分頁操作
         isShowTab(fromIndex: number) {
             const findIndex = this.showTabs.findIndex(item => item === fromIndex);
@@ -50,14 +50,9 @@ export default {
         async callback(response) {
             // decodeCredential will retrive the JWT payload from the credential
             const userData = decodeCredential(response.credential);
-            const haveToken = await storeSettings().getGDriveToken;
-            if (haveToken) {
-                cloundToLocalStorage();
-            } else {
-                storeSettings().setGDriveToken({ sub: userData["sub"], email: userData["email"] });
-                localStorageToCloud();
-            }
+            storeSettings().setGDriveToken({ sub: userData["sub"], email: userData["email"] });
 
+            cloundToLocalStorage();
         },
     }
 }

@@ -67,7 +67,7 @@
             <div class="model_content" v-if="isShowTab(10)">
                 <div class="flex justify-center">
                     <button class="inAppBtn m-2" @click="restAll">
-                        <refresh theme="filled" size="24" fill="#000000" /><span>Reset(Except Records)</span>
+                        <refresh theme="filled" size="24" fill="#000000" /><span>Reset</span>
                     </button>
                 </div>
             </div>
@@ -133,9 +133,7 @@ export default {
             createToaster().success(msg, { position: "top", duration: 2000 });
         },
         async restAll() {
-            const tempRecords = await storeSettings().getBodyFatDataList;
             storageClear();
-            storeSettings().setBodyFatDatalist(tempRecords);
             this.recordingTable = await storeSettings().getRecordingTableDefault;
             this.saveRecordingTable(this.$t("_settings_resetAll"));
         }

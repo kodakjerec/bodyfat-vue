@@ -7,41 +7,46 @@ export const gDriveId: string = "203042550679-snos0ccs48migeeo2kd0mgdtc43vsp90.a
 
 /**
  * 上傳本地資料到雲端
- * @returns 
+ * @returns
  */
 export async function localStorageToCloud() {
   // 準備資料
   let filterData = {};
-  filterData['bodyFatDatalist'] = toRaw(await storeSettings().getBodyFatDataList);
-  filterData['recordingTable'] = toRaw(await storeSettings().getRecordingTable);
+  filterData["bodyFatDatalist"] = toRaw(await storeSettings().getBodyFatDataList);
+  filterData["recordingTable"] = toRaw(await storeSettings().getRecordingTable);
   const saveData = JSON.stringify(filterData);
   // 開始上傳
   let isOverwrite = true;
-  const userInfo: any = storeSettings().getGDriveToken;
-  if (userInfo && !storeSettings().getIsSync) {
+  const userInfo: any = await storeSettings().getGDriveToken;
+
+  if (userInfo) {
     // 下載遠端檔案
     const cloudData: any = await load(userInfo["sub"]);
-    if (cloudData) {
+    const isSync = await storeSettings().getIsSync;
+    console.log(userInfo, cloudData.data, isSync);
+    if (cloudData && cloudData.data && !isSync) {
       // TODO 檢查檔案日期
       const lastModifiedTime: any = cloudData.data.modifiedTime;
 
       // TODO 詢問使用者是否覆蓋
       if (lastModifiedTime) {
         const result = await Swal.fire({
-          title: "覆蓋雲端紀錄？雲端更新日期：" + new Date(lastModifiedTime).toISOString().replace("T","").replace("Z",""),
+          title:
+            "覆蓋雲端紀錄？雲端更新日期：" +
+            new Date(lastModifiedTime).toISOString().replace("T", " ").replace("Z", " "),
           showCancelButton: true,
           confirmButtonText: "是",
         });
         if (!result.isConfirmed) {
           isOverwrite = false;
         }
-        storeSettings().setIsSync(true);
       }
+      storeSettings().setIsSync(true);
     }
   }
 
   // 上傳覆蓋
-  if (isOverwrite) {
+  if (userInfo && isOverwrite) {
     const userId = userInfo["sub"];
     const eMail = userInfo["email"];
     if (userId && eMail && saveData) {
@@ -60,35 +65,39 @@ export async function localStorageToCloud() {
  * @param data json string
  */
 export async function cloundToLocalStorage() {
-  const userInfo: any = storeSettings().getGDriveToken;
+  const userInfo: any = await storeSettings().getGDriveToken;
   if (userInfo) {
     let isOverwrite = true;
-    
+
     const cloudData: any = await load(userInfo["sub"]);
-    if (cloudData && !storeSettings().getIsSync) {
+    const isSync = await storeSettings().getIsSync;
+
+    if (cloudData && cloudData.data && !isSync) {
       // TODO 檢查檔案日期
       const lastModifiedTime: any = cloudData.data.modifiedTime;
 
       // TODO 詢問使用者是否覆蓋
       if (lastModifiedTime) {
         const result = await Swal.fire({
-          title: "覆蓋本地紀錄？雲端更新日期：" + new Date(lastModifiedTime).toISOString().replace("T","").replace("Z",""),
+          title:
+            "覆蓋本地紀錄？雲端更新日期：" +
+            new Date(lastModifiedTime).toISOString().replace("T", " ").replace("Z", " "),
           showCancelButton: true,
           confirmButtonText: "是",
         });
         if (!result.isConfirmed) {
           isOverwrite = false;
         }
-        storeSettings().setIsSync(true);
       }
+      storeSettings().setIsSync(true);
     }
 
     // 下載
-    if (isOverwrite) {
+    if (isOverwrite && cloudData.data) {
       const fromData = JSON.parse(cloudData.data.data);
       if (fromData) {
-        storeSettings().setBodyFatDatalist(fromData['bodyFatDatalist']);
-        storeSettings().setRecordingTable(fromData['recordingTable']);
+        storeSettings().setBodyFatDatalist(fromData["bodyFatDatalist"]);
+        storeSettings().setRecordingTable(fromData["recordingTable"]);
       }
     }
   }
