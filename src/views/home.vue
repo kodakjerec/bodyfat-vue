@@ -106,7 +106,12 @@ export default {
             }
 
             storeSettings().nowLoading = this.$t("_home_save");
-            storeSettings().insertBodyFatDatalist(this.recorder);
+            const result = storeSettings().insertBodyFatDatalist(this.recorder);
+            setTimeout(()=>{
+                storeSettings().nowLoading = "";
+                this.saving = false;
+                this.reset();
+            }, 1000);
         },
         inputFocus(event: any) {
             event.target.select();

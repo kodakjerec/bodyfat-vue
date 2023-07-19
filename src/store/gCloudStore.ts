@@ -1,6 +1,7 @@
 import { storeSettings } from ".";
 import Swal from "sweetalert2";
 import { load, save } from "@/libs/gCloudStore";
+import { toRaw } from "vue";
 
 export const gDriveId: string = "203042550679-snos0ccs48migeeo2kd0mgdtc43vsp90.apps.googleusercontent.com";
 
@@ -11,10 +12,9 @@ export const gDriveId: string = "203042550679-snos0ccs48migeeo2kd0mgdtc43vsp90.a
 export async function localStorageToCloud() {
   // 準備資料
   let filterData = {};
-  filterData['bodyFatDatalist'] = storeSettings().getBodyFatDataList;
-  filterData['recordingTable'] = storeSettings().getRecordingTable;
+  filterData['bodyFatDatalist'] = toRaw(await storeSettings().getBodyFatDataList);
+  filterData['recordingTable'] = toRaw(await storeSettings().getRecordingTable);
   const saveData = JSON.stringify(filterData);
-
   // 開始上傳
   let isOverwrite = true;
   const userInfo: any = storeSettings().getGDriveToken;

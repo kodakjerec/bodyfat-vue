@@ -2,7 +2,7 @@
   <div class="appBgColor flex flex-col grow h-screen overflow-x-hidden">
     <div id="app_header"></div>
     <!-- nowLoading -->
-    <div v-if="nowLoading" class="absolute w-full h-screen bg-slate-100 opacity-90 z-10">
+    <div v-if="nowLoading" class="absolute w-full h-screen appBgColor opacity-90 z-10">
       <div class="inset-x-20 top-1/2 absolute font-black text-2xl text-center">{{ nowLoading }}</div>
     </div>
     <!-- Content -->
