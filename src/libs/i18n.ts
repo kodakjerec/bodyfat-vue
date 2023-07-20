@@ -18,8 +18,25 @@ const i18n = createI18n<[MessageSchema], 'zh-TW' | 'en-US'>({
   }
 })
 
+/**
+ * 變更語系
+ * @param lang 
+ */
 export function changeLanguage(lang:string) {
     i18n.global.locale = lang;
+}
+
+/**
+ * 取得語系的json
+ * @param lang 語系
+ * @returns 語系json
+ */
+export function getDictionary(lang:string):Object {
+  switch(lang) {
+    case 'zh-TW': return zh;
+    case 'en-US': return en;
+  }
+  return zh;
 }
 
 export default i18n

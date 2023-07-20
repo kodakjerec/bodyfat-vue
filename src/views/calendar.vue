@@ -1,6 +1,17 @@
 <template>
     <div class="h-full">
-        <calendar-view :show-date="showDate" :time-format-options="{ hour: 'numeric', minute: '2-digit' }" :class="'theme-default'" :current-period-label="'icons'" :enable-date-selection="true" :date-classes="myDateClasses" @click-date="clickDate" @click-item="clickItem" class="calendarClass" :items="items">
+        <calendar-view
+            :show-date="showDate"
+            :time-format-options="{ hour: 'numeric', minute: '2-digit' }"
+            :class="'theme-default'"
+            :current-period-label="'icons'"
+            :enable-date-selection="true"
+            :date-classes="myDateClasses"
+            @click-date="clickDate"
+            @click-item="clickItem"
+            class="calendarClass"
+            :items="items"
+            :locale="lang">
             <template #header="{ headerProps }">
                 <calendar-view-header :header-props="headerProps" @input="setShowDate">
                 </calendar-view-header>
@@ -11,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calendar"
+import { CalendarView, CalendarViewHeader } from "vue-simple-calendar"
 import CalendarDialog from "./components/calendarDialog.vue"
 import "@/../node_modules/vue-simple-calendar/dist/style.css"
 import "@/../node_modules/vue-simple-calendar/dist/css/default.css"
@@ -32,7 +43,8 @@ export default {
             dialogItem: {},
             oldDataList: [],
             items: [],
-            dateCountList: [] as Array<any>
+            dateCountList: [] as Array<any>,
+            lang: storeSettings().getLang
         }
     },
     computed: {

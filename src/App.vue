@@ -140,7 +140,7 @@ export default {
         },
         {
           element: "#btn_settings",
-          intro: this.$t("_intro_step4") + "☁️",
+          intro: this.$t("_intro_step4") + "🌤️",
         },
       ]
       this.intro

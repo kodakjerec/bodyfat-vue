@@ -23,7 +23,7 @@ export async function localStorageToCloud() {
     // 下載遠端檔案
     const cloudData: any = await load(userInfo["sub"]);
     const isSync = await storeSettings().getIsSync;
-    console.log(userInfo, cloudData.data, isSync);
+    
     if (cloudData && cloudData.data && !isSync) {
       // TODO 檢查檔案日期
       const lastModifiedTime: any = cloudData.data.modifiedTime;

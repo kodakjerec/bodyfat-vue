@@ -2,7 +2,7 @@
     <!-- Accounts -->
     <div class="flex flex-wrap rounded appSecondColor m-2" tabindex="0">
         <div class="model_header">
-            <label class="text-gray-700 font-bold text-xl">Accounts</label>
+            <label class="text-gray-700 font-bold text-xl">{{ $t("_settings_block_accounts") }}</label>
             <div class="float-right">
                 <minus v-if="isShowTab(0)" theme="filled" size="24" fill="#000000" @click="delTab(0)" />
                 <plus v-else theme="filled" size="24" fill="#000000" @click="addTab(0)" />

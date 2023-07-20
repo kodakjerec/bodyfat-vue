@@ -33,20 +33,20 @@ export interface recordModule {
 export const storeSettings = defineStore({
   id: "settings",
   state: () => ({
-    secretKey: "kodak19890604", // secret key
-    recordingTable: [], // recording table
-    lastPath: "", // last visit page
-    bodyFatDatalist: [],
+    secretKey: "kodak19890604" as string, // secret key
+    recordingTable: [] as Array<recordModule>, // recording table
+    lastPath: "" as string, // last visit page
+    bodyFatDatalist: [] as Array<any>,
 
-    googleOAuth2token: "" as any, // google OAuth2 token
-    googleDriveFileName: "BodyFatRecorder.txt",
+    googleOAuth2token: {} as any, // google OAuth2 token
+    googleDriveFileName: "BodyFatRecorder.txt" as string,
 
-    eChartSetting: {}, // eChart setting
-    nowLoading: "", // local loading mask
+    eChartSetting: {} as any, // eChart setting
+    nowLoading: "" as string, // local loading mask
 
-    isSync: false, // 是否有問過同步
-    isIntro: true, // 第一次登入
-    lang: "zh-TW", // 語系
+    isSync: false as boolean, // 是否有問過同步
+    isIntro: true as boolean, // 第一次登入
+    lang: "zh-TW" as string, // 語系
   }),
   getters: {
     getRecordingTableDefault() {

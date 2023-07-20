@@ -3,7 +3,7 @@
         <!-- language -->
         <div class="flex flex-wrap rounded appSecondColor m-2" tabindex="8">
             <div class="model_header">
-                <label class="text-gray-700 font-bold text-xl">Language</label>
+                <label class="text-gray-700 font-bold text-xl">{{ $t("_settings_block_language") }}</label>
                 <div class="float-right">
                     <minus v-if="isShowTab(8)" theme="filled" size="24" fill="#000000" @click="delTab(8)" />
                     <plus v-else theme="filled" size="24" fill="#000000" @click="addTab(8)" />
@@ -16,7 +16,7 @@
         <!-- recordingTable -->
         <div class="flex flex-wrap rounded appSecondColor m-2" tabindex="9">
             <div class="model_header">
-                <label class="text-gray-700 font-bold text-xl">Recording Columns</label>
+                <label class="text-gray-700 font-bold text-xl">{{ $t("_settings_block_recordingColumns") }}</label>
                 <div class="float-right">
                     <minus v-if="isShowTab(9)" theme="filled" size="24" fill="#000000" @click="delTab(9)" />
                     <plus v-else theme="filled" size="24" fill="#000000" @click="addTab(9)" />
@@ -58,7 +58,7 @@
         <!-- Others -->
         <div class="flex flex-wrap rounded appSecondColor m-2" tabindex="10">
             <div class="model_header">
-                <label class="text-gray-700 font-bold text-xl">Others</label>
+                <label class="text-gray-700 font-bold text-xl">{{ $t("_settings_block_others") }}</label>
                 <div class="float-right">
                     <minus v-if="isShowTab(10)" theme="filled" size="24" fill="#000000" @click="delTab(10)" />
                     <plus v-else theme="filled" size="24" fill="#000000" @click="addTab(10)" />
@@ -67,7 +67,7 @@
             <div class="model_content" v-if="isShowTab(10)">
                 <div class="flex justify-center">
                     <button class="inAppBtn m-2" @click="restAll">
-                        <refresh theme="filled" size="24" fill="#000000" /><span>Reset</span>
+                        <refresh theme="filled" size="24" fill="#000000" /><span>{{ $t('_reset') }}</span>
                     </button>
                 </div>
             </div>
