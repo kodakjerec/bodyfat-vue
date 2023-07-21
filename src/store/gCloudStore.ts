@@ -3,8 +3,9 @@ import Swal from "sweetalert2";
 import { load, save } from "@/libs/gCloudStore";
 import { toRaw } from "vue";
 import { createToaster } from "@meforma/vue-toaster";
-import { useI18n } from "vue-i18n";
-const { t } = useI18n();
+import i18n from "@/libs/i18n";
+import { use } from "echarts";
+const { t } = i18n.global;
 
 /**
  * 上傳本地資料到雲端
@@ -51,7 +52,7 @@ export async function localStorageToCloud() {
     const eMail = userInfo["email"];
     if (userId && eMail && saveData) {
       const patchResult = await save(userId, eMail, saveData);
-      createToaster.success(t("_gcloud_local_cloud_finish"));
+      createToaster().success(t("_gcloud_local_cloud_finish", { position: "top" }));
       if (patchResult) {
         return patchResult;
       }
@@ -97,7 +98,7 @@ export async function cloundToLocalStorage() {
       if (fromData) {
         storeSettings().setBodyFatDatalist(fromData["bodyFatDatalist"]);
         storeSettings().setRecordingTable(fromData["recordingTable"]);
-        createToaster(t("_gcloud_cloud_local_finish"));
+        createToaster().success(t("_gcloud_cloud_local_finish", { position: "top" }));
       }
     }
   }

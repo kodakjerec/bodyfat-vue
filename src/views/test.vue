@@ -40,13 +40,12 @@ export default {
     },
     methods: {
         encode() {
-            console.log(toRaw(this.decodeText), toRaw(this.mykey))
             this.encodeText = AES.encrypt(toRaw(this.decodeText), toRaw(this.mykey));
-            createToaster().success('encode', { position: "top", duration: 2000 });
+            createToaster().success('encode', { position: "top" });
         },
         decode() {
             this.decodeText = AES.decrypt(this.encodeText, this.mykey).toString(encUtf8);
-            createToaster().success('decode', { position: "top", duration: 2000 });
+            createToaster().success('decode', { position: "top" });
         }
     }
 }

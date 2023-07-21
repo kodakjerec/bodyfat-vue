@@ -1,17 +1,6 @@
 <template>
     <div class="h-full">
-        <calendar-view
-            :show-date="showDate"
-            :time-format-options="{ hour: 'numeric', minute: '2-digit' }"
-            :class="'theme-default'"
-            :current-period-label="'icons'"
-            :enable-date-selection="true"
-            :date-classes="myDateClasses"
-            @click-date="clickDate"
-            @click-item="clickItem"
-            class="calendarClass"
-            :items="items"
-            :locale="lang">
+        <calendar-view :show-date="showDate" :time-format-options="{ hour: 'numeric', minute: '2-digit' }" :class="'theme-default'" :current-period-label="'icons'" :enable-date-selection="true" :date-classes="myDateClasses" @click-date="clickDate" @click-item="clickItem" class="calendarClass" :items="items" :locale="lang">
             <template #header="{ headerProps }">
                 <calendar-view-header :header-props="headerProps" @input="setShowDate">
                 </calendar-view-header>
@@ -115,7 +104,7 @@ export default {
                 this.showDialog = true;
                 this.dialogItem = item;
             } else {
-                createToaster().error(this.$t("_calendar_errorMsg1"), { position: "top", duration: 2000 });
+                createToaster().error(this.$t("_calendar_errorMsg1"), { position: "top" });
             }
         },
         closeDialog(event) {

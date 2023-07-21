@@ -130,7 +130,7 @@ export default {
         },
         saveRecordingTable(msg: string = this.$t("_save_success")) {
             storeSettings().setRecordingTable(this.recordingTable);
-            createToaster().success(msg, { position: "top", duration: 2000 });
+            createToaster().success(msg, { position: "top" });
         },
         async restAll() {
             storageClear();

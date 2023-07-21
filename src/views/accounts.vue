@@ -50,7 +50,7 @@ export default {
         async callback(response) {
             // decodeCredential will retrive the JWT payload from the credential
             const userData = decodeCredential(response.credential);
-            storeSettings().setGDriveToken({ sub: userData["sub"], email: userData["email"] });
+            await storeSettings().setGDriveToken({ sub: userData["sub"], email: userData["email"] });
 
             cloundToLocalStorage();
         },

@@ -101,13 +101,13 @@ export default {
             }
 
             if (errorMsg.length > 0) {
-                createToaster().error(errorMsg, { position: "top", duration: 2000 });
+                createToaster().error(errorMsg, { position: "top" });
                 return;
             }
 
             storeSettings().nowLoading = this.$t("_home_save");
             const result = storeSettings().insertBodyFatDatalist(this.recorder);
-            setTimeout(()=>{
+            setTimeout(() => {
                 storeSettings().nowLoading = "";
                 this.saving = false;
                 this.reset();

@@ -9,8 +9,9 @@ export default class myLocalforge {
     return result;
   }
 
-  static set(key: string, value: any, callback: any) {
-    localforage.setItem(key, value, callback);
+  static async set(key: string, value: any) {
+    const result = await localforage.setItem(key, value);
+    return result;
   }
 
   static clear() {

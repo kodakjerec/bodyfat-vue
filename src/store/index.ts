@@ -9,12 +9,12 @@ import { toRaw } from "vue";
 const { t } = i18n.global;
 
 // unify storage method.
-export function storageSet(key, value, cloundSave: boolean = false): void {
-  myLocalforge.set(key, toRaw(value), () => {
-    if (cloundSave) {
-      localStorageToCloud();
-    }
-  });
+export async function storageSet(key, value, cloundSave: boolean = false): Promise<any> {
+  const result = myLocalforge.set(key, toRaw(value));
+  if (cloundSave) {
+    localStorageToCloud();
+  }
+  return result;
 }
 export async function storageGet(key): Promise<any> {
   const result = await myLocalforge.get(key);
@@ -140,10 +140,10 @@ export const storeSettings = defineStore({
       this.bodyFatDatalist.splice(findIndex, 1);
       storageSet("bodyFatDatalist", this.bodyFatDatalist, true);
     },
-    setGDriveToken(token: object) {
+    async setGDriveToken(token: object) {
       this.googleOAuth2token = token;
       const aesAPIKey = AES.encrypt(JSON.stringify(token), this.secretKey).toString();
-      storageSet("googleOAuth2token", aesAPIKey, false);
+      await storageSet("googleOAuth2token", aesAPIKey, false);
     },
     setEChartSetting(fromSetting: object) {
       storageSet("eChartSetting", fromSetting);
