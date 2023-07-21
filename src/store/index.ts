@@ -73,7 +73,9 @@ export const storeSettings = defineStore({
     getBodyFatDataList(state) {
       return state.bodyFatDatalist;
     },
-    getGDriveToken(state) {
+    async getGDriveToken(state) {
+      const encodeText = await storageGet("googleOAuth2token");
+      state.googleOAuth2token = JSON.parse(AES.decrypt(encodeText, this.secretKey).toString(encUtf8));
       return state.googleOAuth2token;
     },
     getIsSync(state) {

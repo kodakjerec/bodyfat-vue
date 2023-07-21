@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
-import pinia from "./store";
+import pinia, { storeSettings } from "./store";
 import "./assets/tailwind.css";
 import "@icon-park/vue-next/styles/index.css";
 import "highlight.js/styles/dark.css";
@@ -22,12 +22,16 @@ app.provide("intro", introJS());
 import i18n from "./libs/i18n";
 // 消除背景警告
 import "default-passive-events";
+// crypto-js
+import AES from "crypto-js/aes";
+import encUtf8 from "crypto-js/enc-utf8";
+const realId: string = AES.decrypt(gDriveId, "kodak19890604").toString(encUtf8);
 
 app
   .use(router)
   .use(pinia)
   .use(vue3GoogleLogin, {
-    clientId: gDriveId,
+    clientId: realId,
   })
   .use(VueSweetalert2)
   .use(i18n)
