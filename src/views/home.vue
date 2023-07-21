@@ -16,7 +16,7 @@
         </template>
         <div class="flex justify-center mt-2">
             <button class="inAppBtn" @click="save" :disabled="saving">
-                <save theme="filled" size="24" fill="#000000" /><span>Save</span>
+                <save theme="filled" size="24" fill="#000000" /><span>{{ $t('_save') }}</span>
             </button>
         </div>
     </div>

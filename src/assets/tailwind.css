@@ -16,10 +16,10 @@
     @apply text-center flex-grow
   }
   .input {
-    @apply text-center text-gray-700 bg-yellow-500 border rounded-md focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 flex-grow;
+    @apply text-center text-gray-700 bg-yellow-500 border border-black rounded-md focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 flex-grow;
   }
   .select {
-    @apply bg-yellow-500 border rounded-md
+    @apply bg-yellow-500 border rounded-md border-black
   }
   .model_header {
     @apply w-full text-center my-1;
