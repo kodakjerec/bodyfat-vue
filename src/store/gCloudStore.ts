@@ -3,6 +3,8 @@ import Swal from "sweetalert2";
 import { load, save } from "@/libs/gCloudStore";
 import { toRaw } from "vue";
 import { createToaster } from "@meforma/vue-toaster";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 /**
  * 上傳本地資料到雲端
@@ -31,10 +33,9 @@ export async function localStorageToCloud() {
       if (lastModifiedTime) {
         const result = await Swal.fire({
           title:
-            this.$t("_gcloud_local_cloud") +
-            new Date(lastModifiedTime).toISOString().replace("T", " ").replace("Z", " "),
+            t("_gcloud_local_cloud") + new Date(lastModifiedTime).toISOString().replace("T", " ").replace("Z", " "),
           showCancelButton: true,
-          confirmButtonText: this.$t("_Yes"),
+          confirmButtonText: t("_Yes"),
         });
         if (!result.isConfirmed) {
           isOverwrite = false;
@@ -50,7 +51,7 @@ export async function localStorageToCloud() {
     const eMail = userInfo["email"];
     if (userId && eMail && saveData) {
       const patchResult = await save(userId, eMail, saveData);
-      createToaster.success(this.$t("_gcloud_local_cloud_finish"));
+      createToaster.success(t("_gcloud_local_cloud_finish"));
       if (patchResult) {
         return patchResult;
       }
@@ -79,8 +80,7 @@ export async function cloundToLocalStorage() {
       if (lastModifiedTime) {
         const result = await Swal.fire({
           title:
-            this.$t("_gcloud_cloud_local") +
-            new Date(lastModifiedTime).toISOString().replace("T", " ").replace("Z", " "),
+            t("_gcloud_cloud_local") + new Date(lastModifiedTime).toISOString().replace("T", " ").replace("Z", " "),
           showCancelButton: true,
           confirmButtonText: "是",
         });
@@ -97,7 +97,7 @@ export async function cloundToLocalStorage() {
       if (fromData) {
         storeSettings().setBodyFatDatalist(fromData["bodyFatDatalist"]);
         storeSettings().setRecordingTable(fromData["recordingTable"]);
-        createToaster(this.$t("_gcloud_cloud_local_finish"));
+        createToaster(t("_gcloud_cloud_local_finish"));
       }
     }
   }

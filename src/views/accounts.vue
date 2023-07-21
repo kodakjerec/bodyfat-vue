@@ -17,7 +17,7 @@
 <script lang="ts">
 import { Minus, Plus } from "@icon-park/vue-next";
 import { decodeCredential } from "vue3-google-login";
-import { cloundToLocalStorage, localStorageToCloud } from "@/store/gCloudStore";
+import { cloundToLocalStorage } from "@/store/gCloudStore";
 import { storeSettings } from "@/store";
 
 export default {
