@@ -52,7 +52,7 @@ export async function localStorageToCloud() {
     const eMail = userInfo["email"];
     if (userId && eMail && saveData) {
       const patchResult = await save(userId, eMail, saveData);
-      createToaster().success(t("_gcloud_local_cloud_finish", { position: "top" }));
+      createToaster().success(t("_gcloud_local_cloud_finish"), { position: "top" });
       if (patchResult) {
         return patchResult;
       }
@@ -98,7 +98,7 @@ export async function cloundToLocalStorage() {
       if (fromData) {
         storeSettings().setBodyFatDatalist(fromData["bodyFatDatalist"]);
         storeSettings().setRecordingTable(fromData["recordingTable"]);
-        createToaster().success(t("_gcloud_cloud_local_finish", { position: "top" }));
+        createToaster().success(t("_gcloud_cloud_local_finish"), { position: "top" });
       }
     }
   }
