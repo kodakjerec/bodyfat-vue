@@ -2,8 +2,7 @@ import { storeSettings } from ".";
 import Swal from "sweetalert2";
 import { load, save } from "@/libs/gCloudStore";
 import { toRaw } from "vue";
-
-export const gDriveId: string = "203042550679-snos0ccs48migeeo2kd0mgdtc43vsp90.apps.googleusercontent.com";
+import { createToaster } from "@meforma/vue-toaster";
 
 /**
  * 上傳本地資料到雲端
@@ -23,7 +22,7 @@ export async function localStorageToCloud() {
     // 下載遠端檔案
     const cloudData: any = await load(userInfo["sub"]);
     const isSync = await storeSettings().getIsSync;
-    
+
     if (cloudData && cloudData.data && !isSync) {
       // TODO 檢查檔案日期
       const lastModifiedTime: any = cloudData.data.modifiedTime;
@@ -32,10 +31,10 @@ export async function localStorageToCloud() {
       if (lastModifiedTime) {
         const result = await Swal.fire({
           title:
-            "覆蓋雲端紀錄？雲端更新日期：" +
+            this.$t("_gcloud_local_cloud") +
             new Date(lastModifiedTime).toISOString().replace("T", " ").replace("Z", " "),
           showCancelButton: true,
-          confirmButtonText: "是",
+          confirmButtonText: this.$t("_Yes"),
         });
         if (!result.isConfirmed) {
           isOverwrite = false;
@@ -51,7 +50,7 @@ export async function localStorageToCloud() {
     const eMail = userInfo["email"];
     if (userId && eMail && saveData) {
       const patchResult = await save(userId, eMail, saveData);
-
+      createToaster.success(this.$t("_gcloud_local_cloud_finish"));
       if (patchResult) {
         return patchResult;
       }
@@ -80,7 +79,7 @@ export async function cloundToLocalStorage() {
       if (lastModifiedTime) {
         const result = await Swal.fire({
           title:
-            "覆蓋本地紀錄？雲端更新日期：" +
+            this.$t("_gcloud_cloud_local") +
             new Date(lastModifiedTime).toISOString().replace("T", " ").replace("Z", " "),
           showCancelButton: true,
           confirmButtonText: "是",
@@ -98,6 +97,7 @@ export async function cloundToLocalStorage() {
       if (fromData) {
         storeSettings().setBodyFatDatalist(fromData["bodyFatDatalist"]);
         storeSettings().setRecordingTable(fromData["recordingTable"]);
+        createToaster(this.$t("_gcloud_cloud_local_finish"));
       }
     }
   }

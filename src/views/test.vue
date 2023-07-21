@@ -34,8 +34,8 @@ export default {
     data() {
         return {
             encodeText: "",
-            mykey: "kodak19890604",
-            decodeText: "203042550679-snos0ccs48migeeo2kd0mgdtc43vsp90.apps.googleusercontent.com"
+            mykey: "",
+            decodeText: ""
         }
     },
     methods: {
