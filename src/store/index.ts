@@ -75,6 +75,7 @@ export const storeSettings = defineStore({
     },
     async getGDriveToken(state) {
       const aesAPIKey = await storageGet("googleOAuth2token");
+      if(!aesAPIKey) return "";
       state.googleOAuth2token = JSON.parse(AES.decrypt(aesAPIKey, this.secretKey).toString(encUtf8));
       return state.googleOAuth2token;
     },
