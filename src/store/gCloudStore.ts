@@ -4,7 +4,6 @@ import { load, save } from "@/libs/gCloudStore";
 import { toRaw } from "vue";
 import { createToaster } from "@meforma/vue-toaster";
 import i18n from "@/libs/i18n";
-import { use } from "echarts";
 const { t } = i18n.global;
 
 /**
