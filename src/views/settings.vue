@@ -72,7 +72,7 @@
                 </div>
             </div>
         </div>
-        <a target="_blank" href="/privacy_chinese.md" aria-label="privacy">{{ $t('_privacy') }}</a>
+        <a target="_blank" href="https://kodakjerec.github.io/bodyfatrecorder/privacy_chinese.md" aria-label="privacy">{{ $t('_privacy') }}</a>
         <a></a>
     </div>
 </template>
