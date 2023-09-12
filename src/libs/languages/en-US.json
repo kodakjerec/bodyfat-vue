@@ -43,6 +43,7 @@
   "_gcloud_cloud_local": "Overwrite local data? Cloud last-update:",
   "_gcloud_local_cloud_finish": "Overwrite cloud records successfully.",
   "_gcloud_cloud_local_finish": "Overwrite local records successfully.",
+  "_privacy": "Privacy notice",
   "以下為錯誤訊息": "",
   "_col_date_errorMsg1": "Date is a required input field.",
   "_calendar_errorMsg1": "Record does not exist? An unknown error occurred.",

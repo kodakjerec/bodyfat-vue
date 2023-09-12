@@ -72,12 +72,14 @@
                 </div>
             </div>
         </div>
+        <a target="_blank" href="/privacy_chinese.md" aria-label="privacy">{{ $t('_privacy') }}</a>
+        <a></a>
     </div>
 </template>
 
 <script lang="ts">
-import { Minus, Plus, AddItem, Delete, Refresh } from "@icon-park/vue-next";
 import { storageClear, storeSettings, type recordModule } from "@/store/index";
+import { AddItem, Delete, Minus, Plus, Refresh } from "@icon-park/vue-next";
 import { createToaster } from "@meforma/vue-toaster";
 import iconNumber from "./components/iconNumber.vue";
 import selectLanguage from "./components/selectLanguage.vue";

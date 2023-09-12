@@ -43,6 +43,7 @@
   "_gcloud_cloud_local": "覆蓋本地紀錄？雲端更新日期：",
   "_gcloud_local_cloud_finish": "覆蓋雲端紀錄成功",
   "_gcloud_cloud_local_finish": "覆蓋本地紀錄成功",
+  "_privacy": "隱私權聲明",
   "以下為錯誤訊息": "",
   "_col_date_errorMsg1": "日期為必要輸入欄位",
   "_calendar_errorMsg1": "紀錄不存在？發生了未知錯誤",
